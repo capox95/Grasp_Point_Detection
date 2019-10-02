@@ -13,6 +13,10 @@ void PointPose::setInputCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud) { m_cl
 
 void PointPose::setRefPlane(pcl::ModelCoefficients::Ptr &plane) { m_plane = plane; }
 
+Eigen::Vector3f PointPose::getTranslation() { return m_trans; }
+
+Eigen::Quaternionf PointPose::getRotation() { return m_rot; }
+
 void PointPose::computeGraspPoint()
 {
     m_pointsAxes = computeTransformation(m_cloud_grasp, m_plane, m_cloud_projected, m_rot, m_trans);

@@ -63,6 +63,9 @@ int main(int argc, char **argv)
     pp.setInputCloud(cloud_result);
     pp.computeGraspPoint();
 
+    Eigen::Vector3f pos = pp.getTranslation();
+    Eigen::Quaternionf rot = pp.getRotation();
+
     //time computation
     auto endE = std::chrono::steady_clock::now();
     auto diff2 = endE - startE;

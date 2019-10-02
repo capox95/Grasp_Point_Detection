@@ -28,6 +28,11 @@ public:
     void setInputCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud);
 
     void setRefPlane(pcl::ModelCoefficients::Ptr &plane);
+
+    Eigen::Vector3f getTranslation();
+
+    Eigen::Quaternionf getRotation();
+
     void computeGraspPoint();
 
     void visualizeGrasp();
