@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/alessio/dev/Thesis/GitRepo/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/usr/bin/ccmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -77,6 +66,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/bin/ccmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -123,6 +123,19 @@ GraspPointDetection/fast:
 	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/build
 .PHONY : GraspPointDetection/fast
 
+#=============================================================================
+# Target rules for targets named OnlyBin
+
+# Build rule for target.
+OnlyBin: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 OnlyBin
+.PHONY : OnlyBin
+
+# fast build rule for target.
+OnlyBin/fast:
+	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/build
+.PHONY : OnlyBin/fast
+
 src/binsegmentation.o: src/binsegmentation.cpp.o
 
 .PHONY : src/binsegmentation.o
@@ -130,6 +143,7 @@ src/binsegmentation.o: src/binsegmentation.cpp.o
 # target to build an object file
 src/binsegmentation.cpp.o:
 	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.o
+	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.o
 .PHONY : src/binsegmentation.cpp.o
 
 src/binsegmentation.i: src/binsegmentation.cpp.i
@@ -139,6 +153,7 @@ src/binsegmentation.i: src/binsegmentation.cpp.i
 # target to preprocess a source file
 src/binsegmentation.cpp.i:
 	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.i
+	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.i
 .PHONY : src/binsegmentation.cpp.i
 
 src/binsegmentation.s: src/binsegmentation.cpp.s
@@ -148,6 +163,7 @@ src/binsegmentation.s: src/binsegmentation.cpp.s
 # target to generate assembly for a file
 src/binsegmentation.cpp.s:
 	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.s
+	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.s
 .PHONY : src/binsegmentation.cpp.s
 
 src/entropy.o: src/entropy.cpp.o
@@ -204,6 +220,33 @@ src/main.cpp.s:
 	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/only_bin.o: src/only_bin.cpp.o
+
+.PHONY : src/only_bin.o
+
+# target to build an object file
+src/only_bin.cpp.o:
+	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/src/only_bin.cpp.o
+.PHONY : src/only_bin.cpp.o
+
+src/only_bin.i: src/only_bin.cpp.i
+
+.PHONY : src/only_bin.i
+
+# target to preprocess a source file
+src/only_bin.cpp.i:
+	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/src/only_bin.cpp.i
+.PHONY : src/only_bin.cpp.i
+
+src/only_bin.s: src/only_bin.cpp.s
+
+.PHONY : src/only_bin.s
+
+# target to generate assembly for a file
+src/only_bin.cpp.s:
+	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/src/only_bin.cpp.s
+.PHONY : src/only_bin.cpp.s
+
 src/pointpose.o: src/pointpose.cpp.o
 
 .PHONY : src/pointpose.o
@@ -237,9 +280,10 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... edit_cache"
-	@echo "... GraspPointDetection"
 	@echo "... rebuild_cache"
+	@echo "... GraspPointDetection"
+	@echo "... edit_cache"
+	@echo "... OnlyBin"
 	@echo "... src/binsegmentation.o"
 	@echo "... src/binsegmentation.i"
 	@echo "... src/binsegmentation.s"
@@ -249,6 +293,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/only_bin.o"
+	@echo "... src/only_bin.i"
+	@echo "... src/only_bin.s"
 	@echo "... src/pointpose.o"
 	@echo "... src/pointpose.i"
 	@echo "... src/pointpose.s"

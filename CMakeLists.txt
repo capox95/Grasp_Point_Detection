@@ -14,3 +14,7 @@ add_definitions(${PCL_DEFINITIONS})
 add_executable (GraspPointDetection src/main.cpp src/entropy.cpp  src/binsegmentation.cpp src/pointpose.cpp)
 target_link_libraries (GraspPointDetection ${PCL_LIBRARIES})
 target_link_libraries(GraspPointDetection ${Boost_LIBRARIES})
+
+add_executable (OnlyBin src/only_bin.cpp src/binsegmentation.cpp)
+target_link_libraries (OnlyBin ${PCL_LIBRARIES})
+target_link_libraries(OnlyBin ${Boost_LIBRARIES})

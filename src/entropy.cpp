@@ -34,7 +34,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr EntropyFilter::getCloudSeg() { return m_clou
 
 pcl::ModelCoefficients::Ptr EntropyFilter::getPlaneForDepth() { return m_plane; }
 
-void EntropyFilter::compute(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_out)
+bool EntropyFilter::compute(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_out)
 {
     downsample(m_source, m_leafsize, m_cloud_downsample);
     computePolyFitting(m_cloud_downsample, m_mls_points);
@@ -43,8 +43,10 @@ void EntropyFilter::compute(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_out)
 
     m_depth_interval = getPointPlaneDistanceCloud(m_mls_cloud, m_cloud_depth, m_plane);
     if (m_depth_interval < m_depth_threshold) //less than 3 cm
+    {
         PCL_WARN("Depth interval very small, grasp may be not achievable!\n");
-
+        _flag_depth = true;
+    }
     //downsampleCloudAndNormals(m_mls_cloud, m_mls_normals, 0.001, m_convexity_ready);
     localSearchForConvexity(m_mls_cloud, m_mls_normals, m_cloud_convexity);
 
@@ -52,6 +54,12 @@ void EntropyFilter::compute(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_out)
 
     local_search(m_mls_cloud, m_spherical, m_cloud_combined);
     normalizeEntropy(m_spherical);
+
+    if (_max_entropy < 1.0 && _flag_depth)
+    {
+        PCL_WARN("Entropy too small!\n");
+        return false;
+    }
 
     segmentCloudEntropy(m_mls_points, m_spherical, m_cloud_seg, m_entropy_threshold);
 
@@ -273,6 +281,7 @@ void EntropyFilter::normalizeEntropy(pcl::PointCloud<Spherical>::Ptr &spherical)
         spherical->points[i].entropy_normalized = spherical->points[i].entropy / max_entropy;
     }
     std::cout << "max entropy : " << max_entropy << std::endl;
+    _max_entropy = max_entropy;
 }
 
 //LOCAL HISTOGRAM and entropy calculation at the end.

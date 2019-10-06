@@ -49,6 +49,8 @@ public:
 
     bool compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_grasp);
 
+    bool computeEx(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_grasp);
+
     void visualizeNoSpin(bool showLines, bool showVertices);
 
     void visualizeWithSpin(bool showLines, bool showVertices);

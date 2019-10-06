@@ -56,7 +56,9 @@ int main(int argc, char **argv)
     ef.setAngleThresholdForConvexity(5);
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_result(new pcl::PointCloud<pcl::PointXYZ>);
-    ef.compute(cloud_result);
+    bool entropy_result = ef.compute(cloud_result);
+    if (entropy_result == false)
+        return -1;
 
     // GRASP POINT --------------------------------------------------------------------------
     PointPose pp;

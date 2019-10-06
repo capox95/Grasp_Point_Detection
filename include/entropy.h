@@ -21,9 +21,10 @@ private:
 
     pcl::ModelCoefficients::Ptr m_plane;
 
-    float m_leafsize,
-        m_entropy_threshold, m_curvature_threshold, m_depth_interval, m_depth_threshold, m_angle_threshold;
+    float m_leafsize, m_entropy_threshold, m_curvature_threshold,
+        m_depth_interval, m_depth_threshold, m_angle_threshold, _max_entropy;
     int m_KNN;
+    bool _flag_depth;
 
 public:
     EntropyFilter() : m_source(new pcl::PointCloud<pcl::PointXYZRGB>),
@@ -39,6 +40,7 @@ public:
                       m_plane(new pcl::ModelCoefficients)
 
     {
+        _flag_depth = false;
     }
 
     void setInputCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_in);
@@ -63,7 +65,7 @@ public:
 
     pcl::ModelCoefficients::Ptr getPlaneForDepth();
 
-    void compute(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_out);
+    bool compute(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_out);
 
     //
     //ColorMap functions

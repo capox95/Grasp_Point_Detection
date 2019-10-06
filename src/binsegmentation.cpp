@@ -56,29 +56,63 @@ bool BinSegmentation::compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_gras
 {
 
     cloudRGBtoXYZ(m_source, m_source_bw);
-
     bool edges_result = computeEdges(m_source, m_occluding_edges, m_occluded_edges, m_boundary_edges, m_high_curvature_edges, m_rgb_edges);
     if (!edges_result)
+    {
+        PCL_ERROR("edge detection fails\n");
         return false;
+    }
 
     //RANSAC Lines Detection
     bool ransac_success = ransacLineDetection(m_occluding_edges, m_lines);
     if (!ransac_success)
+    {
+        PCL_ERROR("ransac line detection fails\n");
         return false;
-
+    }
     //Points Intersaction
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_vertices(new pcl::PointCloud<pcl::PointXYZ>);
     bool intersaction_result = getIntersactions(m_lines, cloud_vertices);
     if (!intersaction_result)
+    {
+        PCL_ERROR("line intersaction fails\n");
         return false;
-
+    }
     //Get distances and diagonal vector, return 4 vertices inside the original ones
     scaleHull(cloud_vertices, m_cloud_vertices_scaled);
 
     //Add points on the ground (projection of the 4 vertices)
     bool ground_result = addGroundPoints(m_source_bw, m_cloud_vertices_scaled);
     if (!ground_result)
+    {
+        PCL_ERROR("ground points fails\n");
         return false;
+    }
+    //Segmentation based on Convex Hull Crop
+    convexHullCrop(m_source_bw, m_cloud_vertices_scaled, m_hull_result);
+
+    cloudXYZtoRGB(m_hull_result, cloud_grasp);
+
+    return true;
+}
+
+bool BinSegmentation::computeEx(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_grasp)
+{
+    computeEdges(m_source, m_occluding_edges, m_occluded_edges, m_boundary_edges, m_high_curvature_edges, m_rgb_edges);
+
+    //RANSAC Lines Detection
+    ransacLineDetection(m_occluding_edges, m_lines);
+
+    //Points Intersaction
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_vertices(new pcl::PointCloud<pcl::PointXYZ>);
+    getIntersactions(m_lines, cloud_vertices);
+
+    //Get distances and diagonal vector, return 4 vertices inside the original ones
+    scaleHull(cloud_vertices, m_cloud_vertices_scaled);
+
+    cloudRGBtoXYZ(m_source, m_source_bw);
+    //Add points on the ground (projection of the 4 vertices)
+    addGroundPoints(m_source_bw, m_cloud_vertices_scaled);
 
     //Segmentation based on Convex Hull Crop
     convexHullCrop(m_source_bw, m_cloud_vertices_scaled, m_hull_result);
@@ -342,7 +376,8 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
             if (i != k)
             {
                 pcl::lineWithLineIntersection(lines[i], lines[k], point_temp);
-                points.push_back(point_temp);
+                if (point_temp.norm() < 2)
+                    points.push_back(point_temp);
             }
         }
     }
@@ -377,7 +412,10 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
         cloud_vertices->push_back(p_temp);
     }
 
-    return true;
+    if (cloud_vertices->size() != 4)
+        return false;
+    else
+        return true;
 }
 
 void BinSegmentation::scaleHull(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_vertices,

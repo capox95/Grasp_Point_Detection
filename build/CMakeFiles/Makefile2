@@ -97,6 +97,43 @@ clean: CMakeFiles/GraspPointDetection.dir/clean
 .PHONY : clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/OnlyBin.dir
+
+# All Build rule for target.
+CMakeFiles/OnlyBin.dir/all:
+	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/depend
+	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles --progress-num=6,7,8 "Built target OnlyBin"
+.PHONY : CMakeFiles/OnlyBin.dir/all
+
+# Include target in all.
+all: CMakeFiles/OnlyBin.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/OnlyBin.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/Thesis/GitRepo/build/CMakeFiles 3
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/OnlyBin.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/Thesis/GitRepo/build/CMakeFiles 0
+.PHONY : CMakeFiles/OnlyBin.dir/rule
+
+# Convenience name for target.
+OnlyBin: CMakeFiles/OnlyBin.dir/rule
+
+.PHONY : OnlyBin
+
+# clean rule for target.
+CMakeFiles/OnlyBin.dir/clean:
+	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/clean
+.PHONY : CMakeFiles/OnlyBin.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/OnlyBin.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Special targets to cleanup operation of make.
 
 # Special rule to run CMake to check the build system integrity.
