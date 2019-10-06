@@ -31,7 +31,9 @@ int main(int argc, char **argv)
     bin.setScaleFactorHullBorders(0.2);
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_grasp(new pcl::PointCloud<pcl::PointXYZRGB>);
-    bin.compute(cloud_grasp);
+    bool bin_result = bin.compute(cloud_grasp);
+    if (bin_result == false)
+        return -1;
 
     pcl::ModelCoefficients::Ptr plane = bin.getPlaneGroundPoints();
 
@@ -71,9 +73,9 @@ int main(int argc, char **argv)
     auto diff2 = endE - startE;
     std::cout << "duration entropy filter: " << std::chrono::duration<double, std::milli>(diff2).count() << " ms" << std::endl;
 
-    //bin.visualizeNoSpin(true, true);
-    //pp.visualizeGrasp();
-    //ef.visualizeAll(false);
+    bin.visualizeNoSpin(true, true);
+    pp.visualizeGrasp();
+    ef.visualizeAll(false);
 
     return 0;
 }
