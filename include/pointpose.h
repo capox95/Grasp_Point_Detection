@@ -14,6 +14,7 @@ private:
     Eigen::Quaternionf m_rot;
     std::vector<pcl::PointXYZ> m_pointsCoordinateFrame;
     pcl::PointXYZ m_origin;
+    pcl::ModelCoefficients m_line;
 
 public:
     PointPose() : m_source(new pcl::PointCloud<pcl::PointXYZRGB>),
@@ -34,6 +35,8 @@ public:
 
     Eigen::Quaternionf getRotation();
 
+    Eigen::Vector3f getDirectionWrinkle();
+
     void computeGraspPoint();
 
     void visualizeGrasp();
@@ -44,4 +47,6 @@ private:
     void getCoordinateFrame(Eigen::Vector3f &centroid, Eigen::Matrix3f &rotation);
 
     Eigen::Vector3f moveCentroid(Eigen::Vector4f centroid);
+
+    void directionWrinkle();
 };

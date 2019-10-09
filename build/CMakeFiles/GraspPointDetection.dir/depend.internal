@@ -1675,7 +1675,15 @@ CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o
  /usr/local/include/pcl-1.9/pcl/register_point_struct.h
  /usr/local/include/pcl-1.9/pcl/sample_consensus/boost.h
  /usr/local/include/pcl-1.9/pcl/sample_consensus/eigen.h
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/lmeds.hpp
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/mlesac.hpp
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/msac.hpp
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/prosac.hpp
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/ransac.hpp
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/rmsac.hpp
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/rransac.hpp
  /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/sac_model_circle.hpp
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/sac_model_circle3d.hpp
  /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/sac_model_cone.hpp
  /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/sac_model_cylinder.hpp
  /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/sac_model_line.hpp
@@ -1687,9 +1695,20 @@ CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o
  /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/sac_model_perpendicular_plane.hpp
  /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/sac_model_plane.hpp
  /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/sac_model_sphere.hpp
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/impl/sac_model_stick.hpp
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/lmeds.h
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/method_types.h
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/mlesac.h
  /usr/local/include/pcl-1.9/pcl/sample_consensus/model_types.h
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/msac.h
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/prosac.h
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/ransac.h
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/rmsac.h
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/rransac.h
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/sac.h
  /usr/local/include/pcl-1.9/pcl/sample_consensus/sac_model.h
  /usr/local/include/pcl-1.9/pcl/sample_consensus/sac_model_circle.h
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/sac_model_circle3d.h
  /usr/local/include/pcl-1.9/pcl/sample_consensus/sac_model_cone.h
  /usr/local/include/pcl-1.9/pcl/sample_consensus/sac_model_cylinder.h
  /usr/local/include/pcl-1.9/pcl/sample_consensus/sac_model_line.h
@@ -1701,8 +1720,11 @@ CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o
  /usr/local/include/pcl-1.9/pcl/sample_consensus/sac_model_perpendicular_plane.h
  /usr/local/include/pcl-1.9/pcl/sample_consensus/sac_model_plane.h
  /usr/local/include/pcl-1.9/pcl/sample_consensus/sac_model_sphere.h
+ /usr/local/include/pcl-1.9/pcl/sample_consensus/sac_model_stick.h
  /usr/local/include/pcl-1.9/pcl/search/impl/search.hpp
  /usr/local/include/pcl-1.9/pcl/search/search.h
+ /usr/local/include/pcl-1.9/pcl/segmentation/impl/sac_segmentation.hpp
+ /usr/local/include/pcl-1.9/pcl/segmentation/sac_segmentation.h
  /usr/local/include/pcl-1.9/pcl/visualization/area_picking_event.h
  /usr/local/include/pcl-1.9/pcl/visualization/boost.h
  /usr/local/include/pcl-1.9/pcl/visualization/cloud_viewer.h

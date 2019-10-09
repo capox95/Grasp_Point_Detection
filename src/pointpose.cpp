@@ -4,6 +4,8 @@
 #include <pcl/common/common.h>
 #include <pcl/common/pca.h>
 #include <pcl/kdtree/kdtree_flann.h>
+#include <pcl/segmentation/sac_segmentation.h>
+
 #include <pcl/visualization/cloud_viewer.h>
 
 #include "../include/pointpose.h"
@@ -17,6 +19,16 @@ void PointPose::setRefPlane(pcl::ModelCoefficients::Ptr &plane) { m_plane = plan
 Eigen::Vector3f PointPose::getTranslation() { return m_trans; }
 
 Eigen::Quaternionf PointPose::getRotation() { return m_rot; }
+
+Eigen::Vector3f PointPose::getDirectionWrinkle()
+{
+    Eigen::Vector3f value;
+    value.x() = m_line.values[3];
+    value.y() = m_line.values[4];
+    value.z() = m_line.values[5];
+
+    return value;
+}
 
 void PointPose::computeGraspPoint()
 {
@@ -58,6 +70,7 @@ void PointPose::computeGraspPoint()
 void PointPose::visualizeGrasp()
 {
     pcl::visualization::PCLVisualizer viz("PCL Cloud Result");
+    viz.addCoordinateSystem(0.1);
     viz.setBackgroundColor(0.0, 0.0, 0.5);
     viz.addPointCloud<pcl::PointXYZRGB>(m_source, "source");
     viz.addPointCloud<pcl::PointXYZ>(m_cloud_grasp, "cloud_grasp");
@@ -131,6 +144,9 @@ void PointPose::getCoordinateFrame(Eigen::Vector3f &centroid, Eigen::Matrix3f &r
     m_pointsCoordinateFrame.push_back(PointX);
     m_pointsCoordinateFrame.push_back(PointY);
     m_pointsCoordinateFrame.push_back(PointZ);
+
+    Eigen::Vector3f direction = PointX.getVector3fMap() - centroid;
+    std::cout << "direciton : " << direction.x() << ", " << direction.y() << ", " << direction.z() << std::endl;
 }
 
 Eigen::Vector3f PointPose::moveCentroid(Eigen::Vector4f centroid)
@@ -159,4 +175,23 @@ Eigen::Vector3f PointPose::moveCentroid(Eigen::Vector4f centroid)
     }
 
     return new_centroid;
+}
+
+void PointPose::directionWrinkle()
+{
+    //line detection
+    pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
+    pcl::SACSegmentation<pcl::PointXYZ> seg;
+
+    seg.setOptimizeCoefficients(true);
+    seg.setModelType(pcl::SACMODEL_LINE);
+    seg.setMethodType(pcl::SAC_RANSAC);
+    seg.setDistanceThreshold(0.02);
+    seg.setInputCloud(m_cloud_projected);
+    seg.segment(*inliers, m_line);
+    for (int i = 0; i < m_line.values.size(); i++)
+    {
+        std::cout << m_line.values[i] << ", ";
+    }
+    std::cout << std::endl;
 }

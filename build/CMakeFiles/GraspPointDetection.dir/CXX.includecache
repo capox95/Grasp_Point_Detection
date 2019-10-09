@@ -119,6 +119,8 @@ pcl/common/pca.h
 -
 pcl/kdtree/kdtree_flann.h
 -
+pcl/segmentation/sac_segmentation.h
+-
 pcl/visualization/cloud_viewer.h
 -
 ../include/pointpose.h
