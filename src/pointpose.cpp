@@ -3,6 +3,7 @@
 #include <pcl/common/centroid.h>
 #include <pcl/common/common.h>
 #include <pcl/common/pca.h>
+#include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/visualization/cloud_viewer.h>
 
 #include "../include/pointpose.h"
@@ -19,9 +20,41 @@ Eigen::Quaternionf PointPose::getRotation() { return m_rot; }
 
 void PointPose::computeGraspPoint()
 {
-    m_pointsAxes = computeTransformation(m_cloud_grasp, m_plane, m_cloud_projected, m_rot, m_trans);
-}
 
+    // Create the filtering object
+    pcl::ProjectInliers<pcl::PointXYZ> proj;
+    proj.setModelType(pcl::SACMODEL_PLANE);
+    proj.setInputCloud(m_cloud_grasp);
+    proj.setModelCoefficients(m_plane);
+    proj.filter(*m_cloud_projected);
+
+    Eigen::Vector4f centroid;
+    pcl::compute3DCentroid(*m_cloud_projected, centroid);
+    Eigen::Matrix3f covariance;
+    pcl::computeCovarianceMatrixNormalized(*m_cloud_projected, centroid, covariance);
+
+    Eigen::Vector3f eigenValues;
+    Eigen::Matrix3f eigenVectors;
+    pcl::eigen33(covariance, eigenVectors, eigenValues);
+
+    std::vector<int> idx = orderEigenvalues(eigenValues);
+    Eigen::Matrix3f rotation;
+    rotation.col(0) = eigenVectors.col(idx[0]);
+    rotation.col(1) = eigenVectors.col(idx[1]);
+    rotation.col(2) = eigenVectors.col(idx[2]);
+
+    Eigen::Quaternion<float> quat(rotation);
+    quat.normalize();
+
+    m_trans = moveCentroid(centroid); //move centroid from projected cloud to original cloud_grasp
+    m_rot = quat;
+
+    //compute point for visualizing coordinate axes
+    getCoordinateFrame(m_trans, rotation);
+
+    PCL_INFO("Position: %f, %f, %f\n", m_trans.x(), m_trans.y(), m_trans.z());
+    PCL_INFO("Orientation: %f, %f, %f, %f\n", quat.x(), quat.y(), quat.z(), quat.w());
+}
 void PointPose::visualizeGrasp()
 {
     pcl::visualization::PCLVisualizer viz("PCL Cloud Result");
@@ -33,12 +66,14 @@ void PointPose::visualizeGrasp()
     viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 0.0f, 0.0f, "cloud_projected");
     viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_projected");
 
-    viz.addSphere(m_pointsAxes[0], 0.005, "sphere");
-    viz.addArrow(m_pointsAxes[1], m_pointsAxes[0], 1.0f, 0.0f, 0.0f, false, "x_axis");
-    viz.addArrow(m_pointsAxes[2], m_pointsAxes[0], 0.0f, 1.0f, 0.0f, false, "y_axis");
-    viz.addArrow(m_pointsAxes[3], m_pointsAxes[0], 0.0f, 0.0f, 1.0f, false, "z_axis");
+    viz.addSphere(m_pointsCoordinateFrame[0], 0.005, "sphere");
+    viz.addArrow(m_pointsCoordinateFrame[1], m_pointsCoordinateFrame[0], 1.0f, 0.0f, 0.0f, false, "x_axis");
+    viz.addArrow(m_pointsCoordinateFrame[2], m_pointsCoordinateFrame[0], 0.0f, 1.0f, 0.0f, false, "y_axis");
+    viz.addArrow(m_pointsCoordinateFrame[3], m_pointsCoordinateFrame[0], 0.0f, 0.0f, 1.0f, false, "z_axis");
 
-    viz.addCube(m_trans, m_rot, 0.01, 0.01, 0.01, "cube");
+    viz.addSphere(m_origin, 0.005, "origin");
+
+    //viz.addCube(m_trans, m_rot, 0.01, 0.01, 0.01, "cube");
 }
 
 std::vector<int> PointPose::orderEigenvalues(Eigen::Vector3f eigenValuesPCA)
@@ -74,105 +109,54 @@ std::vector<int> PointPose::orderEigenvalues(Eigen::Vector3f eigenValuesPCA)
     return result;
 }
 
-std::vector<pcl::PointXYZ> PointPose::computeAxes(pcl::PointXYZ &centroid, Eigen::Matrix3f &eigenVectorsPCA,
-                                                  std::vector<int> &eigenIdx, float &grasp_depth)
+void PointPose::getCoordinateFrame(Eigen::Vector3f &centroid, Eigen::Matrix3f &rotation)
 {
-    std::vector<pcl::PointXYZ> results;
+    pcl::PointXYZ centroidXYZ;
+    centroidXYZ.getVector3fMap() = centroid;
 
-    // centroid translated along z axis by grasp_depth
-    pcl::PointXYZ point;
-    int id = eigenIdx[2];
-    point.x = centroid.x + grasp_depth * eigenVectorsPCA.col(id).x();
-    point.y = centroid.y + grasp_depth * eigenVectorsPCA.col(id).y();
-    point.z = centroid.z + grasp_depth * eigenVectorsPCA.col(id).z();
+    pcl::PointXYZ PointX = pcl::PointXYZ((centroid(0) + rotation.col(0)(0)),
+                                         (centroid(1) + rotation.col(0)(1)),
+                                         (centroid(2) + rotation.col(0)(2)));
 
-    if (point.z > centroid.z)
-    {
-        point.x = centroid.x - grasp_depth * eigenVectorsPCA.col(id).x();
-        point.y = centroid.y - grasp_depth * eigenVectorsPCA.col(id).y();
-        point.z = centroid.z - grasp_depth * eigenVectorsPCA.col(id).z();
-    }
+    pcl::PointXYZ PointY = pcl::PointXYZ((centroid(0) + rotation.col(1)(0)),
+                                         (centroid(1) + rotation.col(1)(1)),
+                                         (centroid(2) + rotation.col(1)(2)));
 
-    centroid.x = point.x;
-    centroid.y = point.y;
-    centroid.z = point.z;
-    results.push_back(point); // centroid point above
+    pcl::PointXYZ PointZ = pcl::PointXYZ((centroid(0) + rotation.col(2)(0)),
+                                         (centroid(1) + rotation.col(2)(1)),
+                                         (centroid(2) + rotation.col(2)(2)));
 
-    //points for the axes
-    float t = 0.1;
-    for (int i = 0; i < eigenIdx.size(); i++)
-    {
-        int id = eigenIdx[i];
-        point.x = centroid.x + t * eigenVectorsPCA.col(id).x();
-        point.y = centroid.y + t * eigenVectorsPCA.col(id).y();
-        point.z = centroid.z + t * eigenVectorsPCA.col(id).z();
-
-        if (point.z < centroid.z)
-        {
-            point.x = centroid.x - t * eigenVectorsPCA.col(id).x();
-            point.y = centroid.y - t * eigenVectorsPCA.col(id).y();
-            point.z = centroid.z - t * eigenVectorsPCA.col(id).z();
-        }
-        results.push_back(point);
-    }
-    return results;
+    m_pointsCoordinateFrame.clear();
+    m_pointsCoordinateFrame.push_back(centroidXYZ);
+    m_pointsCoordinateFrame.push_back(PointX);
+    m_pointsCoordinateFrame.push_back(PointY);
+    m_pointsCoordinateFrame.push_back(PointZ);
 }
 
-std::vector<pcl::PointXYZ> PointPose::computeTransformation(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
-                                                            pcl::ModelCoefficients::Ptr &coefficients,
-                                                            pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_projected,
-                                                            Eigen::Quaternionf &Quaternion,
-                                                            Eigen::Vector3f &Translation)
+Eigen::Vector3f PointPose::moveCentroid(Eigen::Vector4f centroid)
 {
+    Eigen::Vector3f new_centroid;
 
-    float z_ref = 10000;
-    for (int i = 0; i < cloud->size(); i++)
+    pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
+    kdtree.setInputCloud(m_cloud_projected);
+    pcl::PointXYZ searchPoint;
+
+    searchPoint.x = centroid.x();
+    searchPoint.y = centroid.y();
+    searchPoint.z = centroid.z();
+
+    int K = 1;
+    std::vector<int> indices(K);
+    std::vector<float> distances(K);
+
+    if (kdtree.nearestKSearch(searchPoint, K, indices, distances) > 0)
     {
-        if (cloud->points[i].z < z_ref)
-            z_ref = cloud->points[i].z;
+        //std::cout << m_cloud_projected->points[indices[0]].x << "; " << m_cloud_projected->points[indices[0]].y << "; " << m_cloud_projected->points[indices[0]].z << std::endl;
+        //std::cout << m_cloud_grasp->points[indices[0]].x << "; " << m_cloud_grasp->points[indices[0]].y << "; " << m_cloud_grasp->points[indices[0]].z << std::endl;
+        m_origin = m_cloud_grasp->points[indices[0]];
+
+        new_centroid = m_cloud_grasp->points[indices[0]].getVector3fMap();
     }
 
-    // Create the filtering object
-    pcl::ProjectInliers<pcl::PointXYZ> proj;
-    proj.setModelType(pcl::SACMODEL_PLANE);
-    proj.setInputCloud(cloud);
-    proj.setModelCoefficients(coefficients);
-    proj.filter(*cloud_projected);
-
-    Eigen::Vector4f pcaCentroid;
-    pcl::compute3DCentroid(*cloud_projected, pcaCentroid);
-    Eigen::Matrix3f covariance;
-    pcl::computeCovarianceMatrixNormalized(*cloud_projected, pcaCentroid, covariance);
-
-    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3f> eigen_solver(covariance, Eigen::ComputeEigenvectors);
-    Eigen::Matrix3f eigenVectorsPCA = eigen_solver.eigenvectors();
-    Eigen::Vector3f eigenValuesPCA = eigen_solver.eigenvalues();
-    eigenVectorsPCA.col(2) = eigenVectorsPCA.col(0).cross(eigenVectorsPCA.col(1));
-
-    // ---------------------------------------------
-    // Axes coordinate
-    std::vector<int> eigenvaluesIdx = orderEigenvalues(eigenValuesPCA);
-
-    float grasp_depth = pcaCentroid.z() - z_ref;
-    PCL_WARN("Possible grasp travel distance from centroid: %f mm\n", grasp_depth * 1000);
-
-    pcl::PointXYZ centroid;
-    centroid.x = pcaCentroid.x();
-    centroid.y = pcaCentroid.y();
-    centroid.z = pcaCentroid.z();
-
-    std::vector<pcl::PointXYZ> pointAxes = computeAxes(centroid, eigenVectorsPCA, eigenvaluesIdx, grasp_depth);
-
-    // Final transform
-    Quaternion = eigenVectorsPCA;
-    std::cout << "---------------------------" << std::endl;
-    std::cout << "Quaternion: " << Quaternion.x() << ", " << Quaternion.y() << ", " << Quaternion.z() << ", " << Quaternion.w() << std::endl;
-
-    Translation.x() = centroid.x;
-    Translation.y() = centroid.y;
-    Translation.z() = centroid.z;
-    std::cout << "Translation: " << Translation.x() << ", " << Translation.y() << ", " << Translation.z() << std::endl;
-    std::cout << "---------------------------" << std::endl;
-
-    return pointAxes;
+    return new_centroid;
 }

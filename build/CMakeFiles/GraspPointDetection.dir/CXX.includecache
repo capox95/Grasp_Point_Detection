@@ -117,6 +117,8 @@ pcl/common/common.h
 -
 pcl/common/pca.h
 -
+pcl/kdtree/kdtree_flann.h
+-
 pcl/visualization/cloud_viewer.h
 -
 ../include/pointpose.h

@@ -352,7 +352,8 @@ bool BinSegmentation::checkLinesOrthogonal(std::vector<pcl::ModelCoefficients> &
 
                 if (angle < 1.55 || angle > 1.59)
                 {
-                    PCL_WARN("Angle not orthogonal. Check computed verteces!");
+                    PCL_WARN("Angle not orthogonal. value: %f\n", angle);
+                    std::cout << angle << std::endl;
                     return false;
                 }
 
@@ -401,8 +402,8 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
     }
 
     bool success = checkLinesOrthogonal(lines, points);
-    if (!success)
-        return false;
+    //if (!success)
+    //return false;
 
     //add points to pointcloud performing conversion from Vector4f to PointXYZ
     pcl::PointXYZ p_temp;
@@ -413,7 +414,10 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
     }
 
     if (cloud_vertices->size() != 4)
+    {
+        PCL_WARN("Cloud Vertices different than 4, they are: %d\n", cloud_vertices->size());
         return false;
+    }
     else
         return true;
 }

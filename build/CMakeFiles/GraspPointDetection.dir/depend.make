@@ -1660,11 +1660,15 @@ CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/impl/cloud_iterator.hpp
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/impl/pcl_base.hpp
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/impl/point_types.hpp
+CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/kdtree/impl/kdtree_flann.hpp
+CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/kdtree/kdtree.h
+CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/kdtree/kdtree_flann.h
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/pcl_base.h
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/pcl_config.h
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/pcl_exports.h
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/pcl_macros.h
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/point_cloud.h
+CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/point_representation.h
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/point_traits.h
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/point_types.h
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: /usr/local/include/pcl-1.9/pcl/register_point_struct.h

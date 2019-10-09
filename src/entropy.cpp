@@ -44,7 +44,7 @@ bool EntropyFilter::compute(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_out)
     m_depth_interval = getPointPlaneDistanceCloud(m_mls_cloud, m_cloud_depth, m_plane);
     if (m_depth_interval < m_depth_threshold) //less than 3 cm
     {
-        PCL_WARN("Depth interval very small, grasp may be not achievable!\n");
+        PCL_WARN("Depth interval very small, grasp may be not achievable! value: [%f mm]\n", m_depth_interval * 1000);
         _flag_depth = true;
     }
     //downsampleCloudAndNormals(m_mls_cloud, m_mls_normals, 0.001, m_convexity_ready);
@@ -63,12 +63,17 @@ bool EntropyFilter::compute(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_out)
 
     segmentCloudEntropy(m_mls_points, m_spherical, m_cloud_seg, m_entropy_threshold);
 
-    if (m_cloud_seg->size() != 0)
+    if (m_cloud_seg->size() > 50)
     {
+
         std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> clouds_connected;
         connectedComponets(m_cloud_seg, clouds_connected);
         cloud_out = clouds_connected[0];
     }
+    else
+        cloud_out = m_cloud_seg;
+
+    return true;
 }
 
 //

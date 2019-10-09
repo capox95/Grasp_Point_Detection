@@ -1661,11 +1661,15 @@ CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o
  /usr/local/include/pcl-1.9/pcl/impl/cloud_iterator.hpp
  /usr/local/include/pcl-1.9/pcl/impl/pcl_base.hpp
  /usr/local/include/pcl-1.9/pcl/impl/point_types.hpp
+ /usr/local/include/pcl-1.9/pcl/kdtree/impl/kdtree_flann.hpp
+ /usr/local/include/pcl-1.9/pcl/kdtree/kdtree.h
+ /usr/local/include/pcl-1.9/pcl/kdtree/kdtree_flann.h
  /usr/local/include/pcl-1.9/pcl/pcl_base.h
  /usr/local/include/pcl-1.9/pcl/pcl_config.h
  /usr/local/include/pcl-1.9/pcl/pcl_exports.h
  /usr/local/include/pcl-1.9/pcl/pcl_macros.h
  /usr/local/include/pcl-1.9/pcl/point_cloud.h
+ /usr/local/include/pcl-1.9/pcl/point_representation.h
  /usr/local/include/pcl-1.9/pcl/point_traits.h
  /usr/local/include/pcl-1.9/pcl/point_types.h
  /usr/local/include/pcl-1.9/pcl/register_point_struct.h

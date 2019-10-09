@@ -12,7 +12,8 @@ private:
 
     Eigen::Vector3f m_trans;
     Eigen::Quaternionf m_rot;
-    std::vector<pcl::PointXYZ> m_pointsAxes;
+    std::vector<pcl::PointXYZ> m_pointsCoordinateFrame;
+    pcl::PointXYZ m_origin;
 
 public:
     PointPose() : m_source(new pcl::PointCloud<pcl::PointXYZRGB>),
@@ -40,14 +41,7 @@ public:
 private:
     std::vector<int> orderEigenvalues(Eigen::Vector3f eigenValuesPCA);
 
-    std::vector<pcl::PointXYZ> computeAxes(pcl::PointXYZ &centroid,
-                                           Eigen::Matrix3f &eigenVectorsPCA,
-                                           std::vector<int> &eigenIdx,
-                                           float &grasp_depth);
+    void getCoordinateFrame(Eigen::Vector3f &centroid, Eigen::Matrix3f &rotation);
 
-    std::vector<pcl::PointXYZ> computeTransformation(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
-                                                     pcl::ModelCoefficients::Ptr &coefficients,
-                                                     pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_projected,
-                                                     Eigen::Quaternionf &Quaternion,
-                                                     Eigen::Vector3f &Translation);
+    Eigen::Vector3f moveCentroid(Eigen::Vector4f centroid);
 };
