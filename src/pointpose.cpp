@@ -2,6 +2,7 @@
 #include <pcl/filters/project_inliers.h>
 #include <pcl/common/centroid.h>
 #include <pcl/common/common.h>
+#include <pcl/common/eigen.h>
 #include <pcl/common/pca.h>
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/segmentation/sac_segmentation.h>
@@ -30,7 +31,7 @@ Eigen::Vector3f PointPose::getDirectionWrinkle()
     return value;
 }
 
-void PointPose::computeGraspPoint()
+bool PointPose::computeGraspPoint(Eigen::Affine3d &transformation_matrix)
 {
 
     // Create the filtering object
@@ -64,8 +65,8 @@ void PointPose::computeGraspPoint()
     //compute point for visualizing coordinate axes
     getCoordinateFrame(m_trans, rotation);
 
-    PCL_INFO("Position: %f, %f, %f\n", m_trans.x(), m_trans.y(), m_trans.z());
-    PCL_INFO("Orientation: %f, %f, %f, %f\n", quat.x(), quat.y(), quat.z(), quat.w());
+    transformation_matrix = computeTransformation();
+    return true;
 }
 void PointPose::visualizeGrasp()
 {
@@ -145,14 +146,15 @@ void PointPose::getCoordinateFrame(Eigen::Vector3f &centroid, Eigen::Matrix3f &r
     m_pointsCoordinateFrame.push_back(PointY);
     m_pointsCoordinateFrame.push_back(PointZ);
 
-    Eigen::Vector3f direction = PointX.getVector3fMap() - centroid;
-    std::cout << "direciton : " << direction.x() << ", " << direction.y() << ", " << direction.z() << std::endl;
+    _directionX = PointX.getVector3fMap() - centroid;
+    _directionY = PointY.getVector3fMap() - centroid;
+    _directionZ = PointZ.getVector3fMap() - centroid;
+
+    //std::cout << "direciton : " << direction.x() << ", " << direction.y() << ", " << direction.z() << std::endl;
 }
 
 Eigen::Vector3f PointPose::moveCentroid(Eigen::Vector4f centroid)
 {
-    Eigen::Vector3f new_centroid;
-
     pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
     kdtree.setInputCloud(m_cloud_projected);
     pcl::PointXYZ searchPoint;
@@ -171,10 +173,10 @@ Eigen::Vector3f PointPose::moveCentroid(Eigen::Vector4f centroid)
         //std::cout << m_cloud_grasp->points[indices[0]].x << "; " << m_cloud_grasp->points[indices[0]].y << "; " << m_cloud_grasp->points[indices[0]].z << std::endl;
         m_origin = m_cloud_grasp->points[indices[0]];
 
-        new_centroid = m_cloud_grasp->points[indices[0]].getVector3fMap();
+        _centroid = m_cloud_grasp->points[indices[0]].getVector3fMap();
     }
 
-    return new_centroid;
+    return _centroid;
 }
 
 void PointPose::directionWrinkle()
@@ -194,4 +196,32 @@ void PointPose::directionWrinkle()
         std::cout << m_line.values[i] << ", ";
     }
     std::cout << std::endl;
+}
+
+Eigen::Affine3d PointPose::computeTransformation()
+{
+    Eigen::VectorXd from_line_x, from_line_y, to_line_x, to_line_y;
+
+    from_line_x.resize(6);
+    from_line_y.resize(6);
+    to_line_x.resize(6);
+    to_line_y.resize(6);
+
+    //Origin
+    from_line_x << 0, 0, 0, 1, 0, 0;
+    from_line_y << 0, 0, 0, 0, 1, 0;
+
+    to_line_x.head<3>() = _centroid.cast<double>();
+    to_line_x.tail<3>() = _directionX.cast<double>();
+
+    to_line_y.head<3>() = _centroid.cast<double>();
+    to_line_y.tail<3>() = _directionY.cast<double>();
+
+    Eigen::Affine3d transformation;
+    if (pcl::transformBetween2CoordinateSystems(from_line_x, from_line_y, to_line_x, to_line_y, transformation))
+    {
+        std::cout << "Transformation matrix: \n"
+                  << transformation.matrix() << std::endl;
+    }
+    return transformation;
 }

@@ -65,10 +65,8 @@ int main(int argc, char **argv)
     pp.setSourceCloud(source);
     pp.setRefPlane(plane);
     pp.setInputCloud(cloud_result);
-    pp.computeGraspPoint();
-
-    Eigen::Vector3f pos = pp.getTranslation();
-    Eigen::Quaternionf rot = pp.getRotation();
+    Eigen::Affine3d transformation;
+    pp.computeGraspPoint(transformation);
 
     //time computation
     auto endE = std::chrono::steady_clock::now();

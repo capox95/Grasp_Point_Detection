@@ -16,6 +16,8 @@ private:
     pcl::PointXYZ m_origin;
     pcl::ModelCoefficients m_line;
 
+    Eigen::Vector3f _directionX, _directionY, _directionZ, _centroid;
+
 public:
     PointPose() : m_source(new pcl::PointCloud<pcl::PointXYZRGB>),
                   m_cloud_grasp(new pcl::PointCloud<pcl::PointXYZ>),
@@ -37,7 +39,7 @@ public:
 
     Eigen::Vector3f getDirectionWrinkle();
 
-    void computeGraspPoint();
+    bool computeGraspPoint(Eigen::Affine3d &transformation_matrix);
 
     void visualizeGrasp();
 
@@ -49,4 +51,6 @@ private:
     Eigen::Vector3f moveCentroid(Eigen::Vector4f centroid);
 
     void directionWrinkle();
+
+    Eigen::Affine3d computeTransformation();
 };
