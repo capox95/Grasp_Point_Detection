@@ -139,6 +139,15 @@ void PointPose::getCoordinateFrame(Eigen::Vector3f &centroid, Eigen::Matrix3f &r
     pcl::PointXYZ PointZ = pcl::PointXYZ((centroid(0) + rotation.col(2)(0)),
                                          (centroid(1) + rotation.col(2)(1)),
                                          (centroid(2) + rotation.col(2)(2)));
+    if (PointZ.z < centroid(2))
+    {
+        PointZ = pcl::PointXYZ((centroid(0) - rotation.col(2)(0)),
+                               (centroid(1) - rotation.col(2)(1)),
+                               (centroid(2) - rotation.col(2)(2)));
+    }
+
+    std::cout << rotation.col(2) << std::endl;
+    std::cout << PointZ << std::endl;
 
     m_pointsCoordinateFrame.clear();
     m_pointsCoordinateFrame.push_back(centroidXYZ);
@@ -200,25 +209,25 @@ void PointPose::directionWrinkle()
 
 Eigen::Affine3d PointPose::computeTransformation()
 {
-    Eigen::VectorXd from_line_x, from_line_y, to_line_x, to_line_y;
+    Eigen::VectorXd from_line_x, from_line_z, to_line_x, to_line_z;
 
     from_line_x.resize(6);
-    from_line_y.resize(6);
+    from_line_z.resize(6);
     to_line_x.resize(6);
-    to_line_y.resize(6);
+    to_line_z.resize(6);
 
     //Origin
     from_line_x << 0, 0, 0, 1, 0, 0;
-    from_line_y << 0, 0, 0, 0, 1, 0;
+    from_line_z << 0, 0, 0, 0, 0, 1;
 
     to_line_x.head<3>() = _centroid.cast<double>();
     to_line_x.tail<3>() = _directionX.cast<double>();
 
-    to_line_y.head<3>() = _centroid.cast<double>();
-    to_line_y.tail<3>() = _directionY.cast<double>();
+    to_line_z.head<3>() = _centroid.cast<double>();
+    to_line_z.tail<3>() = _directionZ.cast<double>();
 
     Eigen::Affine3d transformation;
-    if (pcl::transformBetween2CoordinateSystems(from_line_x, from_line_y, to_line_x, to_line_y, transformation))
+    if (pcl::transformBetween2CoordinateSystems(from_line_x, from_line_z, to_line_x, to_line_z, transformation))
     {
         std::cout << "Transformation matrix: \n"
                   << transformation.matrix() << std::endl;
