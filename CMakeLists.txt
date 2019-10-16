@@ -18,3 +18,11 @@ target_link_libraries(GraspPointDetection ${Boost_LIBRARIES})
 add_executable (OnlyBin src/only_bin.cpp src/binsegmentation.cpp)
 target_link_libraries (OnlyBin ${PCL_LIBRARIES})
 target_link_libraries(OnlyBin ${Boost_LIBRARIES})
+
+add_executable (EntropyOnly src/entropy_only.cpp src/entropy.cpp src/pointpose.cpp)
+target_link_libraries (EntropyOnly ${PCL_LIBRARIES})
+target_link_libraries(EntropyOnly ${Boost_LIBRARIES})
+
+add_executable (Pico src/pico.cpp src/entropy.cpp src/pointpose.cpp)
+target_link_libraries (Pico ${PCL_LIBRARIES})
+target_link_libraries(Pico ${Boost_LIBRARIES})

@@ -56,11 +56,11 @@ bool PointPose::computeGraspPoint(Eigen::Affine3d &transformation_matrix)
     rotation.col(1) = eigenVectors.col(idx[1]);
     rotation.col(2) = eigenVectors.col(idx[2]);
 
-    Eigen::Quaternion<float> quat(rotation);
-    quat.normalize();
+    //Eigen::Quaternion<float> quat(rotation);
+    //quat.normalize();
 
     m_trans = moveCentroid(centroid); //move centroid from projected cloud to original cloud_grasp
-    m_rot = quat;
+    //m_rot = quat;
 
     //compute point for visualizing coordinate axes
     getCoordinateFrame(m_trans, rotation);
@@ -232,5 +232,6 @@ Eigen::Affine3d PointPose::computeTransformation()
         std::cout << "Transformation matrix: \n"
                   << transformation.matrix() << std::endl;
     }
+
     return transformation;
 }
