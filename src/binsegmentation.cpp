@@ -90,6 +90,8 @@ bool BinSegmentation::compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_gras
     else
         PCL_INFO("Line Intersaction DONE \n");
 
+    m_cloud_vertices = cloud_vertices;
+
     //Get distances and diagonal vector, return 4 vertices inside the original ones
     scaleHull(cloud_vertices, m_cloud_vertices_scaled);
 
@@ -111,6 +113,27 @@ bool BinSegmentation::compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_gras
 void BinSegmentation::visualize(bool showLines = true, bool showVertices = true, bool spin = true)
 {
     //PointCloud Visualization
+    pcl::visualization::PCLVisualizer vizSource("PCL Source");
+    vizSource.addCoordinateSystem(0.1, "coord", 0);
+    vizSource.setBackgroundColor(0.5f, 0.5f, 0.5f);
+    vizSource.addPointCloud(m_source, "m_source");
+    if (showLines)
+    {
+        vizSource.addLine(m_lines[0], "line0", 0);
+        vizSource.addLine(m_lines[1], "line1", 0);
+        vizSource.addLine(m_lines[2], "line2", 0);
+        vizSource.addLine(m_lines[3], "line3", 0);
+    }
+
+    if (showVertices)
+    {
+        for (int i = 0; i < m_cloud_vertices->points.size(); i++)
+        {
+            std::string name = "point" + std::to_string(i);
+            vizSource.addSphere(m_cloud_vertices->points[i], 0.01, 1.0f, 0.0f, 0.0f, name, 0);
+        }
+    }
+
     pcl::visualization::PCLVisualizer viz("PCL Segmentation");
     viz.addCoordinateSystem(0.1, "coord", 0);
     viz.addPointCloud(m_source, "m_source");
@@ -246,7 +269,7 @@ bool BinSegmentation::checkLinesOrthogonal(std::vector<pcl::ModelCoefficients> &
             value = pcl::sqrPointToLineDistance(points[k], line_pt, line_dir, sqr_norm);
             std::cout << value << std::endl;
 
-            if (value < 0.0001) //points[i] IS on the line
+            if (value < (m_sqr_eps / 2)) //points[i] IS on the line
             {
                 idx[i].push_back(k);
                 //std::cout << value << ", " << k << ", " << i << std::endl;
@@ -259,7 +282,7 @@ bool BinSegmentation::checkLinesOrthogonal(std::vector<pcl::ModelCoefficients> &
         if (idx[i].size() != 2)
         {
             PCL_ERROR("Found %d intersaction instead of 2\n", idx[i].size());
-            //return false;
+            return false;
         }
 
     Eigen::Vector4f point_temp;
@@ -308,7 +331,7 @@ bool BinSegmentation::checkLinesOrthogonal(std::vector<pcl::ModelCoefficients> &
                 {
                     PCL_WARN("Angle not orthogonal. value: %f\n", angle);
                     std::cout << angle << std::endl;
-                    //return false;
+                    return false;
                 }
 
                 continue;
@@ -330,7 +353,7 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
         {
             if (i != k)
             {
-                pcl::lineWithLineIntersection(lines[i], lines[k], point_temp);
+                pcl::lineWithLineIntersection(lines[i], lines[k], point_temp, m_sqr_eps * m_sqr_eps); //2 cm max distance from the true solution
                 if (point_temp.norm() < 2)
                     points.push_back(point_temp);
             }

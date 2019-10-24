@@ -11,13 +11,15 @@ private:
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr m_occluded_edges;
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr m_boundary_edges;
 
-    pcl::PointCloud<pcl::PointXYZ>::Ptr m_cloud_vertices_scaled;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr m_cloud_vertices_scaled, m_cloud_vertices;
     pcl::PointCloud<pcl::PointXYZ>::Ptr m_hull_result;
 
     pcl::ModelCoefficients::Ptr m_plane;
 
     int m_num_lines;
     float m_scale_factor;
+    double m_sqr_eps; //  maximum allowable distance to the true solution lineWithLineIntersection (need to be taken squared) and
+                      // maximum distance between point and line in checkOrthogonality
     std::vector<pcl::ModelCoefficients> m_lines;
 
 public:
@@ -27,9 +29,11 @@ public:
                         m_occluded_edges(new pcl::PointCloud<pcl::PointXYZRGBA>),
                         m_boundary_edges(new pcl::PointCloud<pcl::PointXYZRGBA>),
                         m_cloud_vertices_scaled(new pcl::PointCloud<pcl::PointXYZ>),
+                        m_cloud_vertices(new pcl::PointCloud<pcl::PointXYZ>),
                         m_hull_result(new pcl::PointCloud<pcl::PointXYZ>),
                         m_plane(new pcl::ModelCoefficients)
     {
+        m_sqr_eps = 0.02;
     }
 
     void setInputCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud);
