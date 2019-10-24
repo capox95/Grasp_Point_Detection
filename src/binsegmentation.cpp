@@ -41,7 +41,8 @@ void BinSegmentation::cloudRGBtoXYZ(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &clou
     }
 }
 
-void BinSegmentation::cloudXYZtoRGB(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_xyz, pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_rgb)
+void BinSegmentation::cloudXYZtoRGB(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_xyz,
+                                    pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_rgb)
 {
     cloud_rgb->points.resize(cloud_xyz->size());
     for (int i = 0; i < cloud_xyz->points.size(); i++)
@@ -56,7 +57,7 @@ bool BinSegmentation::compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_gras
 {
 
     cloudRGBtoXYZ(m_source, m_source_bw);
-    bool edges_result = computeEdges(m_source, m_occluding_edges, m_occluded_edges, m_boundary_edges, m_high_curvature_edges, m_rgb_edges);
+    bool edges_result = computeEdges(m_source, m_occluding_edges, m_occluded_edges, m_boundary_edges);
     if (!edges_result)
     {
         PCL_ERROR("edge detection fails\n");
@@ -148,11 +149,10 @@ void BinSegmentation::visualize(bool showLines = true, bool showVertices = true,
 }
 
 bool BinSegmentation::computeEdges(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr &occluding_edges,
-                                   pcl::PointCloud<pcl::PointXYZRGBA>::Ptr &occluded_edges, pcl::PointCloud<pcl::PointXYZRGBA>::Ptr &boundary_edges,
-                                   pcl::PointCloud<pcl::PointXYZRGBA>::Ptr &high_curvature_edges, pcl::PointCloud<pcl::PointXYZRGBA>::Ptr &rgb_edges)
+                                   pcl::PointCloud<pcl::PointXYZRGBA>::Ptr &occluded_edges, pcl::PointCloud<pcl::PointXYZRGBA>::Ptr &boundary_edges)
 {
 
-    pcl::OrganizedEdgeFromRGB<pcl::PointXYZRGB, pcl::Label> oed;
+    pcl::OrganizedEdgeBase<pcl::PointXYZRGB, pcl::Label> oed;
     oed.setInputCloud(cloud);
     oed.setDepthDisconThreshold(0.02); // 2cm
     oed.setMaxSearchNeighbors(50);
@@ -163,14 +163,10 @@ bool BinSegmentation::computeEdges(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud
     pcl::copyPointCloud(*cloud, label_indices[0].indices, *boundary_edges);
     pcl::copyPointCloud(*cloud, label_indices[1].indices, *occluding_edges);
     pcl::copyPointCloud(*cloud, label_indices[2].indices, *occluded_edges);
-    pcl::copyPointCloud(*cloud, label_indices[3].indices, *high_curvature_edges);
-    pcl::copyPointCloud(*cloud, label_indices[4].indices, *rgb_edges);
 
     std::cout << "boundary_edges : " << boundary_edges->size() << std::endl;
     std::cout << "occluding_edges : " << occluding_edges->size() << std::endl;
     std::cout << "occluded_edges : " << occluded_edges->size() << std::endl;
-    std::cout << "high_curvature_edges : " << high_curvature_edges->size() << std::endl;
-    std::cout << "rgb_edges : " << rgb_edges->size() << std::endl;
 
     if (occluding_edges->size() == 0)
         return false;
@@ -244,18 +240,27 @@ bool BinSegmentation::checkLinesOrthogonal(std::vector<pcl::ModelCoefficients> &
         sqr_norm = sqrt(line_dir.norm());
 
         //check all the 4 points
-        std::vector<int> vtemp;
+        //std::vector<int> vtemp;
         for (int k = 0; k < points.size(); k++)
         {
             value = pcl::sqrPointToLineDistance(points[k], line_pt, line_dir, sqr_norm);
-            //std::cout << value << std::endl;
+            std::cout << value << std::endl;
 
             if (value < 0.0001) //points[i] IS on the line
             {
                 idx[i].push_back(k);
+                //std::cout << value << ", " << k << ", " << i << std::endl;
             }
         }
+        std::cout << std::endl;
     }
+
+    for (int i = 0; i < lines.size(); i++)
+        if (idx[i].size() != 2)
+        {
+            PCL_ERROR("Found %d intersaction instead of 2\n", idx[i].size());
+            //return false;
+        }
 
     Eigen::Vector4f point_temp;
     for (int i = 0; i < lines.size(); i++)
@@ -303,7 +308,7 @@ bool BinSegmentation::checkLinesOrthogonal(std::vector<pcl::ModelCoefficients> &
                 {
                     PCL_WARN("Angle not orthogonal. value: %f\n", angle);
                     std::cout << angle << std::endl;
-                    return false;
+                    //return false;
                 }
 
                 continue;
@@ -353,9 +358,12 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
     }
     //PCL_INFO("purge done\n");
 
-    //bool success = checkLinesOrthogonal(lines, points);
-    //if (!success)
-    //return false;
+    if (points.size() != 4)
+        return false;
+
+    bool success = checkLinesOrthogonal(lines, points);
+    if (!success)
+        return false;
     //PCL_INFO("checkLinesOrthogonal DONE\n");
 
     //add points to pointcloud performing conversion from Vector4f to PointXYZ

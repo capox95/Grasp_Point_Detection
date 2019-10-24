@@ -10,8 +10,7 @@ private:
     pcl::PointCloud<pcl::PointXYZ>::Ptr m_occluding_edges;
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr m_occluded_edges;
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr m_boundary_edges;
-    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr m_high_curvature_edges;
-    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr m_rgb_edges;
+
     pcl::PointCloud<pcl::PointXYZ>::Ptr m_cloud_vertices_scaled;
     pcl::PointCloud<pcl::PointXYZ>::Ptr m_hull_result;
 
@@ -27,8 +26,6 @@ public:
                         m_occluding_edges(new pcl::PointCloud<pcl::PointXYZ>),
                         m_occluded_edges(new pcl::PointCloud<pcl::PointXYZRGBA>),
                         m_boundary_edges(new pcl::PointCloud<pcl::PointXYZRGBA>),
-                        m_high_curvature_edges(new pcl::PointCloud<pcl::PointXYZRGBA>),
-                        m_rgb_edges(new pcl::PointCloud<pcl::PointXYZRGBA>),
                         m_cloud_vertices_scaled(new pcl::PointCloud<pcl::PointXYZ>),
                         m_hull_result(new pcl::PointCloud<pcl::PointXYZ>),
                         m_plane(new pcl::ModelCoefficients)
@@ -52,15 +49,19 @@ public:
     void visualize(bool showLines, bool showVertices, bool spin);
 
 private:
-    bool computeEdges(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr &occluding_edges,
-                      pcl::PointCloud<pcl::PointXYZRGBA>::Ptr &occluded_edges, pcl::PointCloud<pcl::PointXYZRGBA>::Ptr &boundary_edges,
-                      pcl::PointCloud<pcl::PointXYZRGBA>::Ptr &high_curvature_edges, pcl::PointCloud<pcl::PointXYZRGBA>::Ptr &rgb_edges);
+    bool computeEdges(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud,
+                      pcl::PointCloud<pcl::PointXYZ>::Ptr &occluding_edges,
+                      pcl::PointCloud<pcl::PointXYZRGBA>::Ptr &occluded_edges,
+                      pcl::PointCloud<pcl::PointXYZRGBA>::Ptr &boundary_edges);
 
-    bool ransacLineDetection(pcl::PointCloud<pcl::PointXYZ>::Ptr &occluding_edges, std::vector<pcl::ModelCoefficients> &lines);
+    bool ransacLineDetection(pcl::PointCloud<pcl::PointXYZ>::Ptr &occluding_edges,
+                             std::vector<pcl::ModelCoefficients> &lines);
 
-    bool checkLinesOrthogonal(std::vector<pcl::ModelCoefficients> &lines, std::vector<Eigen::Vector4f> &points);
+    bool checkLinesOrthogonal(std::vector<pcl::ModelCoefficients> &lines,
+                              std::vector<Eigen::Vector4f> &points);
 
-    bool getIntersactions(std::vector<pcl::ModelCoefficients> &lines, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_vertices);
+    bool getIntersactions(std::vector<pcl::ModelCoefficients> &lines,
+                          pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_vertices);
 
     void scaleHull(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_vertices,
                    pcl::PointCloud<pcl::PointXYZ>::Ptr &hull_result);
