@@ -115,8 +115,10 @@ void BinSegmentation::visualize(bool showLines = true, bool showVertices = true,
     //PointCloud Visualization
     pcl::visualization::PCLVisualizer vizSource("PCL Source");
     vizSource.addCoordinateSystem(0.1, "coord", 0);
-    vizSource.setBackgroundColor(0.5f, 0.5f, 0.5f);
+    vizSource.setBackgroundColor(0.0f, 0.0f, 0.5f);
     vizSource.addPointCloud(m_source, "m_source");
+    vizSource.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 1.0f, "m_source");
+
     if (showLines)
     {
         vizSource.addLine(m_lines[0], "line0", 0);
@@ -135,14 +137,17 @@ void BinSegmentation::visualize(bool showLines = true, bool showVertices = true,
     }
 
     pcl::visualization::PCLVisualizer viz("PCL Segmentation");
-    viz.addCoordinateSystem(0.1, "coord", 0);
+    //viz.addCoordinateSystem(0.1, "coord", 0);
+    viz.setBackgroundColor(0.0f, 0.0f, 0.5f);
     viz.addPointCloud(m_source, "m_source");
+    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 1.0f, "m_source");
 
-    viz.addPointCloud(m_boundary_edges, "boundary_edges");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 1.0f, 0.0f, "boundary_edges");
+    //viz.addPointCloud(m_boundary_edges, "boundary_edges");
+    //viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 1.0f, 0.0f, "boundary_edges");
 
     viz.addPointCloud(m_occluding_edges, "occluding_edges");
     viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 0.0f, 1.0f, "occluding_edges");
+    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "occluding_edges");
 
     if (showLines)
     {
@@ -267,7 +272,6 @@ bool BinSegmentation::checkLinesOrthogonal(std::vector<pcl::ModelCoefficients> &
         for (int k = 0; k < points.size(); k++)
         {
             value = pcl::sqrPointToLineDistance(points[k], line_pt, line_dir, sqr_norm);
-            std::cout << value << std::endl;
 
             if (value < (m_sqr_eps / 2)) //points[i] IS on the line
             {
@@ -275,7 +279,6 @@ bool BinSegmentation::checkLinesOrthogonal(std::vector<pcl::ModelCoefficients> &
                 //std::cout << value << ", " << k << ", " << i << std::endl;
             }
         }
-        std::cout << std::endl;
     }
 
     for (int i = 0; i < lines.size(); i++)
@@ -494,6 +497,12 @@ bool BinSegmentation::addGroundPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud
     }
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_projected(new pcl::PointCloud<pcl::PointXYZ>);
+
+    //add some padding to be able to go a little be below the ground plane and segment properly with the convex hull
+    if (plane->values[3] < 0)
+        plane->values[3] = plane->values[3] - 0.02;
+    else
+        plane->values[3] = plane->values[3] + 0.02;
 
     // Create the filtering object
     pcl::ProjectInliers<pcl::PointXYZ> proj;

@@ -71,14 +71,19 @@ bool PointPose::computeGraspPoint(Eigen::Affine3d &transformation_matrix)
 void PointPose::visualizeGrasp()
 {
     pcl::visualization::PCLVisualizer viz("PCL Cloud Result");
-    viz.addCoordinateSystem(0.1);
+    //viz.addCoordinateSystem(0.1);
     viz.setBackgroundColor(0.0, 0.0, 0.5);
     viz.addPointCloud<pcl::PointXYZRGB>(m_source, "source");
+    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 1.0f, "source");
+
     viz.addPointCloud<pcl::PointXYZ>(m_cloud_grasp, "cloud_grasp");
     viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_grasp");
-    viz.addPointCloud<pcl::PointXYZ>(m_cloud_projected, "cloud_projected");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 0.0f, 0.0f, "cloud_projected");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_projected");
+    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 0.0f, "cloud_grasp");
+    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_grasp");
+
+    //viz.addPointCloud<pcl::PointXYZ>(m_cloud_projected, "cloud_projected");
+    //viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 0.0f, "cloud_projected");
+    //viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_projected");
 
     viz.addSphere(m_pointsCoordinateFrame[0], 0.005, "sphere");
     viz.addArrow(m_pointsCoordinateFrame[1], m_pointsCoordinateFrame[0], 1.0f, 0.0f, 0.0f, false, "x_axis");

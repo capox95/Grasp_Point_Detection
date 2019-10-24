@@ -46,7 +46,7 @@ int main(int argc, char **argv)
     std::cout << "duration segmentation: " << std::chrono::duration<double, std::milli>(diff).count() << " ms" << std::endl;
     std::cout << std::endl;
 
-    bin.visualize(true, true, true);
+    bin.visualize(false, true, true);
 
     return 0;
 }

@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     BinSegmentation bin;
     bin.setInputCloud(source);
     bin.setNumberLines(4);
-    bin.setScaleFactorHullBorders(0.2);
+    bin.setScaleFactorHullBorders(0.08);
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_grasp(new pcl::PointCloud<pcl::PointXYZRGB>);
     bool bin_result = bin.compute(cloud_grasp);
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
     EntropyFilter ef;
     ef.setInputCloud(cloud_grasp);
     ef.setDownsampleLeafSize(0.005);
-    ef.setEntropyThreshold(0.3);
+    ef.setEntropyThreshold(0.8);
     ef.setKLocalSearch(500);        // Nearest Neighbour Local Search
     ef.setCurvatureThreshold(0.01); //Curvature Threshold for the computation of Entropy
     ef.setDepthThreshold(0.03);
@@ -73,7 +73,10 @@ int main(int argc, char **argv)
     auto diff2 = endE - startE;
     std::cout << "duration entropy filter: " << std::chrono::duration<double, std::milli>(diff2).count() << " ms" << std::endl;
 
-    bin.visualize(true, true, true);
+    auto diffAll = endE - start;
+    std::cout << "overall processing took: " << std::chrono::duration<double, std::milli>(diffAll).count() << " ms" << std::endl;
+
+    bin.visualize(false, true, false);
     pp.visualizeGrasp();
     ef.visualizeAll(false);
 
