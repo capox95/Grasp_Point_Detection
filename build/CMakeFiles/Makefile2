@@ -54,47 +54,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/alessio/dev/Thesis/GitRepo
+CMAKE_SOURCE_DIR = /home/alessio/dev/GitRepo
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/alessio/dev/Thesis/GitRepo/build
-
-#=============================================================================
-# Target rules for target CMakeFiles/GraspPointDetection.dir
-
-# All Build rule for target.
-CMakeFiles/GraspPointDetection.dir/all:
-	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/depend
-	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target GraspPointDetection"
-.PHONY : CMakeFiles/GraspPointDetection.dir/all
-
-# Include target in all.
-all: CMakeFiles/GraspPointDetection.dir/all
-
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/GraspPointDetection.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/Thesis/GitRepo/build/CMakeFiles 5
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/GraspPointDetection.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/Thesis/GitRepo/build/CMakeFiles 0
-.PHONY : CMakeFiles/GraspPointDetection.dir/rule
-
-# Convenience name for target.
-GraspPointDetection: CMakeFiles/GraspPointDetection.dir/rule
-
-.PHONY : GraspPointDetection
-
-# clean rule for target.
-CMakeFiles/GraspPointDetection.dir/clean:
-	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/clean
-.PHONY : CMakeFiles/GraspPointDetection.dir/clean
-
-# clean rule for target.
-clean: CMakeFiles/GraspPointDetection.dir/clean
-
-.PHONY : clean
+CMAKE_BINARY_DIR = /home/alessio/dev/GitRepo/build
 
 #=============================================================================
 # Target rules for target CMakeFiles/OnlyBin.dir
@@ -103,7 +66,7 @@ clean: CMakeFiles/GraspPointDetection.dir/clean
 CMakeFiles/OnlyBin.dir/all:
 	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/depend
 	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles --progress-num=6,7,8 "Built target OnlyBin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alessio/dev/GitRepo/build/CMakeFiles --progress-num=10,11,12 "Built target OnlyBin"
 .PHONY : CMakeFiles/OnlyBin.dir/all
 
 # Include target in all.
@@ -113,9 +76,9 @@ all: CMakeFiles/OnlyBin.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/OnlyBin.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/Thesis/GitRepo/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/GitRepo/build/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/OnlyBin.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/Thesis/GitRepo/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/GitRepo/build/CMakeFiles 0
 .PHONY : CMakeFiles/OnlyBin.dir/rule
 
 # Convenience name for target.
@@ -130,6 +93,117 @@ CMakeFiles/OnlyBin.dir/clean:
 
 # clean rule for target.
 clean: CMakeFiles/OnlyBin.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/EntropyOnly.dir
+
+# All Build rule for target.
+CMakeFiles/EntropyOnly.dir/all:
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/depend
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alessio/dev/GitRepo/build/CMakeFiles --progress-num=1,2,3,4 "Built target EntropyOnly"
+.PHONY : CMakeFiles/EntropyOnly.dir/all
+
+# Include target in all.
+all: CMakeFiles/EntropyOnly.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/EntropyOnly.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/GitRepo/build/CMakeFiles 4
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/EntropyOnly.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/GitRepo/build/CMakeFiles 0
+.PHONY : CMakeFiles/EntropyOnly.dir/rule
+
+# Convenience name for target.
+EntropyOnly: CMakeFiles/EntropyOnly.dir/rule
+
+.PHONY : EntropyOnly
+
+# clean rule for target.
+CMakeFiles/EntropyOnly.dir/clean:
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/clean
+.PHONY : CMakeFiles/EntropyOnly.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/EntropyOnly.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/Pico.dir
+
+# All Build rule for target.
+CMakeFiles/Pico.dir/all:
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/depend
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alessio/dev/GitRepo/build/CMakeFiles --progress-num=13,14,15,16 "Built target Pico"
+.PHONY : CMakeFiles/Pico.dir/all
+
+# Include target in all.
+all: CMakeFiles/Pico.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/Pico.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/GitRepo/build/CMakeFiles 4
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/Pico.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/GitRepo/build/CMakeFiles 0
+.PHONY : CMakeFiles/Pico.dir/rule
+
+# Convenience name for target.
+Pico: CMakeFiles/Pico.dir/rule
+
+.PHONY : Pico
+
+# clean rule for target.
+CMakeFiles/Pico.dir/clean:
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/clean
+.PHONY : CMakeFiles/Pico.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/Pico.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/GraspPointDetection.dir
+
+# All Build rule for target.
+CMakeFiles/GraspPointDetection.dir/all:
+	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/depend
+	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alessio/dev/GitRepo/build/CMakeFiles --progress-num=5,6,7,8,9 "Built target GraspPointDetection"
+.PHONY : CMakeFiles/GraspPointDetection.dir/all
+
+# Include target in all.
+all: CMakeFiles/GraspPointDetection.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/GraspPointDetection.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/GitRepo/build/CMakeFiles 5
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/GraspPointDetection.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/GitRepo/build/CMakeFiles 0
+.PHONY : CMakeFiles/GraspPointDetection.dir/rule
+
+# Convenience name for target.
+GraspPointDetection: CMakeFiles/GraspPointDetection.dir/rule
+
+.PHONY : GraspPointDetection
+
+# clean rule for target.
+CMakeFiles/GraspPointDetection.dir/clean:
+	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/clean
+.PHONY : CMakeFiles/GraspPointDetection.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/GraspPointDetection.dir/clean
 
 .PHONY : clean
 

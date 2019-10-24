@@ -48,24 +48,13 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/alessio/dev/Thesis/GitRepo
+CMAKE_SOURCE_DIR = /home/alessio/dev/GitRepo
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/alessio/dev/Thesis/GitRepo/build
+CMAKE_BINARY_DIR = /home/alessio/dev/GitRepo/build
 
 #=============================================================================
 # Targets provided globally by CMake.
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -78,11 +67,22 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/Thesis/GitRepo/build/CMakeFiles /home/alessio/dev/Thesis/GitRepo/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/GitRepo/build/CMakeFiles /home/alessio/dev/GitRepo/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/Thesis/GitRepo/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alessio/dev/GitRepo/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named GraspPointDetection
-
-# Build rule for target.
-GraspPointDetection: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 GraspPointDetection
-.PHONY : GraspPointDetection
-
-# fast build rule for target.
-GraspPointDetection/fast:
-	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/build
-.PHONY : GraspPointDetection/fast
-
-#=============================================================================
 # Target rules for targets named OnlyBin
 
 # Build rule for target.
@@ -136,14 +123,53 @@ OnlyBin/fast:
 	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/build
 .PHONY : OnlyBin/fast
 
+#=============================================================================
+# Target rules for targets named EntropyOnly
+
+# Build rule for target.
+EntropyOnly: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 EntropyOnly
+.PHONY : EntropyOnly
+
+# fast build rule for target.
+EntropyOnly/fast:
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/build
+.PHONY : EntropyOnly/fast
+
+#=============================================================================
+# Target rules for targets named Pico
+
+# Build rule for target.
+Pico: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Pico
+.PHONY : Pico
+
+# fast build rule for target.
+Pico/fast:
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/build
+.PHONY : Pico/fast
+
+#=============================================================================
+# Target rules for targets named GraspPointDetection
+
+# Build rule for target.
+GraspPointDetection: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 GraspPointDetection
+.PHONY : GraspPointDetection
+
+# fast build rule for target.
+GraspPointDetection/fast:
+	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/build
+.PHONY : GraspPointDetection/fast
+
 src/binsegmentation.o: src/binsegmentation.cpp.o
 
 .PHONY : src/binsegmentation.o
 
 # target to build an object file
 src/binsegmentation.cpp.o:
-	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.o
 	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.o
+	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.o
 .PHONY : src/binsegmentation.cpp.o
 
 src/binsegmentation.i: src/binsegmentation.cpp.i
@@ -152,8 +178,8 @@ src/binsegmentation.i: src/binsegmentation.cpp.i
 
 # target to preprocess a source file
 src/binsegmentation.cpp.i:
-	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.i
 	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.i
+	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.i
 .PHONY : src/binsegmentation.cpp.i
 
 src/binsegmentation.s: src/binsegmentation.cpp.s
@@ -162,8 +188,8 @@ src/binsegmentation.s: src/binsegmentation.cpp.s
 
 # target to generate assembly for a file
 src/binsegmentation.cpp.s:
-	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.s
 	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.s
+	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.s
 .PHONY : src/binsegmentation.cpp.s
 
 src/entropy.o: src/entropy.cpp.o
@@ -172,6 +198,8 @@ src/entropy.o: src/entropy.cpp.o
 
 # target to build an object file
 src/entropy.cpp.o:
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/src/entropy.cpp.o
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/src/entropy.cpp.o
 	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.o
 .PHONY : src/entropy.cpp.o
 
@@ -181,6 +209,8 @@ src/entropy.i: src/entropy.cpp.i
 
 # target to preprocess a source file
 src/entropy.cpp.i:
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/src/entropy.cpp.i
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/src/entropy.cpp.i
 	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.i
 .PHONY : src/entropy.cpp.i
 
@@ -190,8 +220,37 @@ src/entropy.s: src/entropy.cpp.s
 
 # target to generate assembly for a file
 src/entropy.cpp.s:
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/src/entropy.cpp.s
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/src/entropy.cpp.s
 	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.s
 .PHONY : src/entropy.cpp.s
+
+src/entropy_only.o: src/entropy_only.cpp.o
+
+.PHONY : src/entropy_only.o
+
+# target to build an object file
+src/entropy_only.cpp.o:
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/src/entropy_only.cpp.o
+.PHONY : src/entropy_only.cpp.o
+
+src/entropy_only.i: src/entropy_only.cpp.i
+
+.PHONY : src/entropy_only.i
+
+# target to preprocess a source file
+src/entropy_only.cpp.i:
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/src/entropy_only.cpp.i
+.PHONY : src/entropy_only.cpp.i
+
+src/entropy_only.s: src/entropy_only.cpp.s
+
+.PHONY : src/entropy_only.s
+
+# target to generate assembly for a file
+src/entropy_only.cpp.s:
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/src/entropy_only.cpp.s
+.PHONY : src/entropy_only.cpp.s
 
 src/main.o: src/main.cpp.o
 
@@ -247,12 +306,41 @@ src/only_bin.cpp.s:
 	$(MAKE) -f CMakeFiles/OnlyBin.dir/build.make CMakeFiles/OnlyBin.dir/src/only_bin.cpp.s
 .PHONY : src/only_bin.cpp.s
 
+src/pico.o: src/pico.cpp.o
+
+.PHONY : src/pico.o
+
+# target to build an object file
+src/pico.cpp.o:
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/src/pico.cpp.o
+.PHONY : src/pico.cpp.o
+
+src/pico.i: src/pico.cpp.i
+
+.PHONY : src/pico.i
+
+# target to preprocess a source file
+src/pico.cpp.i:
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/src/pico.cpp.i
+.PHONY : src/pico.cpp.i
+
+src/pico.s: src/pico.cpp.s
+
+.PHONY : src/pico.s
+
+# target to generate assembly for a file
+src/pico.cpp.s:
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/src/pico.cpp.s
+.PHONY : src/pico.cpp.s
+
 src/pointpose.o: src/pointpose.cpp.o
 
 .PHONY : src/pointpose.o
 
 # target to build an object file
 src/pointpose.cpp.o:
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/src/pointpose.cpp.o
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/src/pointpose.cpp.o
 	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o
 .PHONY : src/pointpose.cpp.o
 
@@ -262,6 +350,8 @@ src/pointpose.i: src/pointpose.cpp.i
 
 # target to preprocess a source file
 src/pointpose.cpp.i:
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/src/pointpose.cpp.i
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/src/pointpose.cpp.i
 	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.i
 .PHONY : src/pointpose.cpp.i
 
@@ -271,6 +361,8 @@ src/pointpose.s: src/pointpose.cpp.s
 
 # target to generate assembly for a file
 src/pointpose.cpp.s:
+	$(MAKE) -f CMakeFiles/EntropyOnly.dir/build.make CMakeFiles/EntropyOnly.dir/src/pointpose.cpp.s
+	$(MAKE) -f CMakeFiles/Pico.dir/build.make CMakeFiles/Pico.dir/src/pointpose.cpp.s
 	$(MAKE) -f CMakeFiles/GraspPointDetection.dir/build.make CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.s
 .PHONY : src/pointpose.cpp.s
 
@@ -280,22 +372,30 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
-	@echo "... GraspPointDetection"
 	@echo "... edit_cache"
 	@echo "... OnlyBin"
+	@echo "... EntropyOnly"
+	@echo "... Pico"
+	@echo "... GraspPointDetection"
+	@echo "... rebuild_cache"
 	@echo "... src/binsegmentation.o"
 	@echo "... src/binsegmentation.i"
 	@echo "... src/binsegmentation.s"
 	@echo "... src/entropy.o"
 	@echo "... src/entropy.i"
 	@echo "... src/entropy.s"
+	@echo "... src/entropy_only.o"
+	@echo "... src/entropy_only.i"
+	@echo "... src/entropy_only.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
 	@echo "... src/only_bin.o"
 	@echo "... src/only_bin.i"
 	@echo "... src/only_bin.s"
+	@echo "... src/pico.o"
+	@echo "... src/pico.i"
+	@echo "... src/pico.s"
 	@echo "... src/pointpose.o"
 	@echo "... src/pointpose.i"
 	@echo "... src/pointpose.s"

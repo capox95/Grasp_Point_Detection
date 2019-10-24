@@ -73,7 +73,7 @@ int main(int argc, char **argv)
     auto diff2 = endE - startE;
     std::cout << "duration entropy filter: " << std::chrono::duration<double, std::milli>(diff2).count() << " ms" << std::endl;
 
-    bin.visualizeNoSpin(true, true);
+    bin.visualize(true, true, true);
     pp.visualizeGrasp();
     ef.visualizeAll(false);
 

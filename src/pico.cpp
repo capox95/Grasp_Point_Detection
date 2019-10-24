@@ -220,6 +220,19 @@ void ransacLineDetection(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_in, pcl::Mod
     }
 }
 
+void getCloud(std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> &clouds, pcl::PointCloud<pcl::PointXYZ>::Ptr &result)
+{
+    result->width = clouds[0]->width;
+    result->height = clouds[0]->height;
+    result->resize(result->width * result->height);
+    for (int i = 0; i < clouds[0]->points.size(); i++)
+    {
+        result->points[i].x = clouds[0]->points[i].x;
+        result->points[i].y = clouds[0]->points[i].y;
+        result->points[i].z = clouds[0]->points[i].z;
+    }
+}
+
 //----------------------------------------------------------------------------- //
 int main(int argc, char **argv)
 {
@@ -255,6 +268,9 @@ int main(int argc, char **argv)
 
     std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> clouds_connected;
     connectedComponets(cloud_filtered, clouds_connected);
+
+    pcl::PointCloud<pcl::PointXYZ>::Ptr result(new pcl::PointCloud<pcl::PointXYZ>);
+    getCloud(clouds_connected, result);
 
     //
     // ------------------------------------------------------------
@@ -317,6 +333,9 @@ int main(int argc, char **argv)
     viz4.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_map");
 
     viz.spin();
+
+    pcl::PCDWriter writer;
+    writer.write<pcl::PointXYZ>("result.pcd", *result, true);
 
     return 0;
 }

@@ -1,4 +1,6 @@
-/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles/rebuild_cache.dir
-/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles/GraspPointDetection.dir
-/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles/edit_cache.dir
-/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles/OnlyBin.dir
+/home/alessio/dev/GitRepo/build/CMakeFiles/edit_cache.dir
+/home/alessio/dev/GitRepo/build/CMakeFiles/OnlyBin.dir
+/home/alessio/dev/GitRepo/build/CMakeFiles/EntropyOnly.dir
+/home/alessio/dev/GitRepo/build/CMakeFiles/Pico.dir
+/home/alessio/dev/GitRepo/build/CMakeFiles/GraspPointDetection.dir
+/home/alessio/dev/GitRepo/build/CMakeFiles/rebuild_cache.dir

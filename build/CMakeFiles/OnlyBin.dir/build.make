@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/alessio/dev/Thesis/GitRepo
+CMAKE_SOURCE_DIR = /home/alessio/dev/GitRepo
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/alessio/dev/Thesis/GitRepo/build
+CMAKE_BINARY_DIR = /home/alessio/dev/GitRepo/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/OnlyBin.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/OnlyBin.dir/flags.make
 
 CMakeFiles/OnlyBin.dir/src/only_bin.cpp.o: CMakeFiles/OnlyBin.dir/flags.make
 CMakeFiles/OnlyBin.dir/src/only_bin.cpp.o: ../src/only_bin.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/OnlyBin.dir/src/only_bin.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OnlyBin.dir/src/only_bin.cpp.o -c /home/alessio/dev/Thesis/GitRepo/src/only_bin.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alessio/dev/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/OnlyBin.dir/src/only_bin.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OnlyBin.dir/src/only_bin.cpp.o -c /home/alessio/dev/GitRepo/src/only_bin.cpp
 
 CMakeFiles/OnlyBin.dir/src/only_bin.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OnlyBin.dir/src/only_bin.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alessio/dev/Thesis/GitRepo/src/only_bin.cpp > CMakeFiles/OnlyBin.dir/src/only_bin.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alessio/dev/GitRepo/src/only_bin.cpp > CMakeFiles/OnlyBin.dir/src/only_bin.cpp.i
 
 CMakeFiles/OnlyBin.dir/src/only_bin.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OnlyBin.dir/src/only_bin.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alessio/dev/Thesis/GitRepo/src/only_bin.cpp -o CMakeFiles/OnlyBin.dir/src/only_bin.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alessio/dev/GitRepo/src/only_bin.cpp -o CMakeFiles/OnlyBin.dir/src/only_bin.cpp.s
 
 CMakeFiles/OnlyBin.dir/src/only_bin.cpp.o.requires:
 
@@ -83,16 +83,16 @@ CMakeFiles/OnlyBin.dir/src/only_bin.cpp.o.provides.build: CMakeFiles/OnlyBin.dir
 
 CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.o: CMakeFiles/OnlyBin.dir/flags.make
 CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.o: ../src/binsegmentation.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.o -c /home/alessio/dev/Thesis/GitRepo/src/binsegmentation.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alessio/dev/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.o -c /home/alessio/dev/GitRepo/src/binsegmentation.cpp
 
 CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alessio/dev/Thesis/GitRepo/src/binsegmentation.cpp > CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alessio/dev/GitRepo/src/binsegmentation.cpp > CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.i
 
 CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alessio/dev/Thesis/GitRepo/src/binsegmentation.cpp -o CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alessio/dev/GitRepo/src/binsegmentation.cpp -o CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.s
 
 CMakeFiles/OnlyBin.dir/src/binsegmentation.cpp.o.requires:
 
@@ -212,7 +212,7 @@ OnlyBin: /usr/local/lib/libpcl_octree.so
 OnlyBin: /usr/local/lib/libpcl_common.so
 OnlyBin: /usr/lib/x86_64-linux-gnu/libqhull.so
 OnlyBin: CMakeFiles/OnlyBin.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable OnlyBin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/alessio/dev/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable OnlyBin"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/OnlyBin.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -230,6 +230,6 @@ CMakeFiles/OnlyBin.dir/clean:
 .PHONY : CMakeFiles/OnlyBin.dir/clean
 
 CMakeFiles/OnlyBin.dir/depend:
-	cd /home/alessio/dev/Thesis/GitRepo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alessio/dev/Thesis/GitRepo /home/alessio/dev/Thesis/GitRepo /home/alessio/dev/Thesis/GitRepo/build /home/alessio/dev/Thesis/GitRepo/build /home/alessio/dev/Thesis/GitRepo/build/CMakeFiles/OnlyBin.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/alessio/dev/GitRepo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alessio/dev/GitRepo /home/alessio/dev/GitRepo /home/alessio/dev/GitRepo/build /home/alessio/dev/GitRepo/build /home/alessio/dev/GitRepo/build/CMakeFiles/OnlyBin.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/OnlyBin.dir/depend
 

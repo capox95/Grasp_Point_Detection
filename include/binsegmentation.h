@@ -49,11 +49,7 @@ public:
 
     bool compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_grasp);
 
-    bool computeEx(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_grasp);
-
-    void visualizeNoSpin(bool showLines, bool showVertices);
-
-    void visualizeWithSpin(bool showLines, bool showVertices);
+    void visualize(bool showLines, bool showVertices, bool spin);
 
 private:
     bool computeEdges(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr &occluding_edges,
@@ -69,9 +65,16 @@ private:
     void scaleHull(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_vertices,
                    pcl::PointCloud<pcl::PointXYZ>::Ptr &hull_result);
 
-    bool addGroundPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_vertices);
+    bool addGroundPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
+                         pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_vertices,
+                         pcl::ModelCoefficients::Ptr &plane);
 
     void convexHullCrop(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_bw,
                         pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_vertices,
                         pcl::PointCloud<pcl::PointXYZ>::Ptr &hull_result);
+
+    pcl::ModelCoefficients::Ptr planeModel(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud);
+
+    void segmentOccludingEdges(pcl::PointCloud<pcl::PointXYZ>::Ptr &occluding_edges,
+                               pcl::ModelCoefficients::Ptr &plane);
 };

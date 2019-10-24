@@ -141,6 +141,11 @@ void EntropyFilter::colorMapAzimuth(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud_
 void EntropyFilter::visualizeAll(bool flag)
 {
 
+    pcl::visualization::PCLVisualizer vizSource("PCL Source Cloud");
+    vizSource.setBackgroundColor(0.0, 0.0, 0.5);
+    vizSource.addPointCloud<pcl::PointXYZRGB>(m_source, "m_source");
+    vizSource.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 0.0f, "m_source");
+
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_curvature(new pcl::PointCloud<pcl::PointXYZI>);
     colorMapCurvature(cloud_curvature);
     pcl::visualization::PCLVisualizer vizC("PCL Curvature Map");

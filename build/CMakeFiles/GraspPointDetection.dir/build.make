@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/alessio/dev/Thesis/GitRepo
+CMAKE_SOURCE_DIR = /home/alessio/dev/GitRepo
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/alessio/dev/Thesis/GitRepo/build
+CMAKE_BINARY_DIR = /home/alessio/dev/GitRepo/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/GraspPointDetection.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/GraspPointDetection.dir/flags.make
 
 CMakeFiles/GraspPointDetection.dir/src/main.cpp.o: CMakeFiles/GraspPointDetection.dir/flags.make
 CMakeFiles/GraspPointDetection.dir/src/main.cpp.o: ../src/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/GraspPointDetection.dir/src/main.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/GraspPointDetection.dir/src/main.cpp.o -c /home/alessio/dev/Thesis/GitRepo/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alessio/dev/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/GraspPointDetection.dir/src/main.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/GraspPointDetection.dir/src/main.cpp.o -c /home/alessio/dev/GitRepo/src/main.cpp
 
 CMakeFiles/GraspPointDetection.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/GraspPointDetection.dir/src/main.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alessio/dev/Thesis/GitRepo/src/main.cpp > CMakeFiles/GraspPointDetection.dir/src/main.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alessio/dev/GitRepo/src/main.cpp > CMakeFiles/GraspPointDetection.dir/src/main.cpp.i
 
 CMakeFiles/GraspPointDetection.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/GraspPointDetection.dir/src/main.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alessio/dev/Thesis/GitRepo/src/main.cpp -o CMakeFiles/GraspPointDetection.dir/src/main.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alessio/dev/GitRepo/src/main.cpp -o CMakeFiles/GraspPointDetection.dir/src/main.cpp.s
 
 CMakeFiles/GraspPointDetection.dir/src/main.cpp.o.requires:
 
@@ -83,16 +83,16 @@ CMakeFiles/GraspPointDetection.dir/src/main.cpp.o.provides.build: CMakeFiles/Gra
 
 CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.o: CMakeFiles/GraspPointDetection.dir/flags.make
 CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.o: ../src/entropy.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.o -c /home/alessio/dev/Thesis/GitRepo/src/entropy.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alessio/dev/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.o -c /home/alessio/dev/GitRepo/src/entropy.cpp
 
 CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alessio/dev/Thesis/GitRepo/src/entropy.cpp > CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alessio/dev/GitRepo/src/entropy.cpp > CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.i
 
 CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alessio/dev/Thesis/GitRepo/src/entropy.cpp -o CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alessio/dev/GitRepo/src/entropy.cpp -o CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.s
 
 CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.o.requires:
 
@@ -107,16 +107,16 @@ CMakeFiles/GraspPointDetection.dir/src/entropy.cpp.o.provides.build: CMakeFiles/
 
 CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.o: CMakeFiles/GraspPointDetection.dir/flags.make
 CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.o: ../src/binsegmentation.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.o -c /home/alessio/dev/Thesis/GitRepo/src/binsegmentation.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alessio/dev/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.o -c /home/alessio/dev/GitRepo/src/binsegmentation.cpp
 
 CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alessio/dev/Thesis/GitRepo/src/binsegmentation.cpp > CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alessio/dev/GitRepo/src/binsegmentation.cpp > CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.i
 
 CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alessio/dev/Thesis/GitRepo/src/binsegmentation.cpp -o CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alessio/dev/GitRepo/src/binsegmentation.cpp -o CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.s
 
 CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.o.requires:
 
@@ -131,16 +131,16 @@ CMakeFiles/GraspPointDetection.dir/src/binsegmentation.cpp.o.provides.build: CMa
 
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: CMakeFiles/GraspPointDetection.dir/flags.make
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o: ../src/pointpose.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o -c /home/alessio/dev/Thesis/GitRepo/src/pointpose.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alessio/dev/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o -c /home/alessio/dev/GitRepo/src/pointpose.cpp
 
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alessio/dev/Thesis/GitRepo/src/pointpose.cpp > CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alessio/dev/GitRepo/src/pointpose.cpp > CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.i
 
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alessio/dev/Thesis/GitRepo/src/pointpose.cpp -o CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alessio/dev/GitRepo/src/pointpose.cpp -o CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.s
 
 CMakeFiles/GraspPointDetection.dir/src/pointpose.cpp.o.requires:
 
@@ -264,7 +264,7 @@ GraspPointDetection: /usr/local/lib/libpcl_octree.so
 GraspPointDetection: /usr/local/lib/libpcl_common.so
 GraspPointDetection: /usr/lib/x86_64-linux-gnu/libqhull.so
 GraspPointDetection: CMakeFiles/GraspPointDetection.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/alessio/dev/Thesis/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable GraspPointDetection"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/alessio/dev/GitRepo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable GraspPointDetection"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/GraspPointDetection.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -284,6 +284,6 @@ CMakeFiles/GraspPointDetection.dir/clean:
 .PHONY : CMakeFiles/GraspPointDetection.dir/clean
 
 CMakeFiles/GraspPointDetection.dir/depend:
-	cd /home/alessio/dev/Thesis/GitRepo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alessio/dev/Thesis/GitRepo /home/alessio/dev/Thesis/GitRepo /home/alessio/dev/Thesis/GitRepo/build /home/alessio/dev/Thesis/GitRepo/build /home/alessio/dev/Thesis/GitRepo/build/CMakeFiles/GraspPointDetection.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/alessio/dev/GitRepo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alessio/dev/GitRepo /home/alessio/dev/GitRepo /home/alessio/dev/GitRepo/build /home/alessio/dev/GitRepo/build /home/alessio/dev/GitRepo/build/CMakeFiles/GraspPointDetection.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/GraspPointDetection.dir/depend
 

@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/alessio/dev/Thesis/GitRepo/include/binsegmentation.h
+/home/alessio/dev/GitRepo/include/binsegmentation.h
 pcl/ModelCoefficients.h
 -
 
-/home/alessio/dev/Thesis/GitRepo/src/binsegmentation.cpp
+/home/alessio/dev/GitRepo/src/binsegmentation.cpp
 pcl/point_cloud.h
 -
 pcl/point_types.h
@@ -52,9 +52,9 @@ pcl/filters/extract_indices.h
 pcl/segmentation/extract_clusters.h
 -
 ../include/binsegmentation.h
-/home/alessio/dev/Thesis/GitRepo/include/binsegmentation.h
+/home/alessio/dev/GitRepo/include/binsegmentation.h
 
-/home/alessio/dev/Thesis/GitRepo/src/only_bin.cpp
+/home/alessio/dev/GitRepo/src/only_bin.cpp
 pcl/point_types.h
 -
 pcl/io/pcd_io.h
@@ -66,7 +66,7 @@ chrono
 ctime
 -
 ../include/binsegmentation.h
-/home/alessio/dev/Thesis/GitRepo/include/binsegmentation.h
+/home/alessio/dev/GitRepo/include/binsegmentation.h
 
 /usr/include/eigen3/Eigen/Cholesky
 Core

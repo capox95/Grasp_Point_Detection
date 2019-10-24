@@ -26,12 +26,12 @@ int main(int argc, char **argv)
     //
     EntropyFilter ef;
     ef.setInputCloud(source);
-    ef.setDownsampleLeafSize(0.005);
-    ef.setEntropyThreshold(0.7);
-    ef.setKLocalSearch(500);        // Nearest Neighbour Local Search
-    ef.setCurvatureThreshold(0.01); //Curvature Threshold for the computation of Entropy
-    ef.setDepthThreshold(0.03);
-    ef.setAngleThresholdForConvexity(5);
+    ef.setDownsampleLeafSize(0.005);     // size of the leaf for downsampling the cloud, value in meters. Default = 5 mm
+    ef.setEntropyThreshold(0.7);         // Segmentation performed for all points with normalized entropy value above this
+    ef.setKLocalSearch(500);             // Nearest Neighbour Local Search
+    ef.setCurvatureThreshold(0.01);      // Curvature Threshold for the computation of Entropy
+    ef.setDepthThreshold(0.03);          // if the segment region has a value of depth lower than this -> not graspable (value in meters)
+    ef.setAngleThresholdForConvexity(5); // convexity check performed if the angle btw two normal vectors is larger than this
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_result(new pcl::PointCloud<pcl::PointXYZ>);
     bool entropy_result = ef.compute(cloud_result);

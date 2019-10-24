@@ -62,6 +62,11 @@ bool BinSegmentation::compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_gras
         PCL_ERROR("edge detection fails\n");
         return false;
     }
+    else
+        PCL_INFO("Edge Detection DONE \n");
+
+    pcl::ModelCoefficients::Ptr plane_ref = planeModel(m_source_bw);
+    segmentOccludingEdges(m_occluding_edges, plane_ref);
 
     //RANSAC Lines Detection
     bool ransac_success = ransacLineDetection(m_occluding_edges, m_lines);
@@ -70,6 +75,9 @@ bool BinSegmentation::compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_gras
         PCL_ERROR("ransac line detection fails\n");
         return false;
     }
+    else
+        PCL_INFO("RANSAC DONE \n");
+
     //Points Intersaction
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_vertices(new pcl::PointCloud<pcl::PointXYZ>);
     bool intersaction_result = getIntersactions(m_lines, cloud_vertices);
@@ -78,11 +86,14 @@ bool BinSegmentation::compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_gras
         PCL_ERROR("line intersaction fails\n");
         return false;
     }
+    else
+        PCL_INFO("Line Intersaction DONE \n");
+
     //Get distances and diagonal vector, return 4 vertices inside the original ones
     scaleHull(cloud_vertices, m_cloud_vertices_scaled);
 
     //Add points on the ground (projection of the 4 vertices)
-    bool ground_result = addGroundPoints(m_source_bw, m_cloud_vertices_scaled);
+    bool ground_result = addGroundPoints(m_source_bw, m_cloud_vertices_scaled, plane_ref);
     if (!ground_result)
     {
         PCL_ERROR("ground points fails\n");
@@ -96,70 +107,7 @@ bool BinSegmentation::compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_gras
     return true;
 }
 
-bool BinSegmentation::computeEx(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_grasp)
-{
-    computeEdges(m_source, m_occluding_edges, m_occluded_edges, m_boundary_edges, m_high_curvature_edges, m_rgb_edges);
-
-    //RANSAC Lines Detection
-    ransacLineDetection(m_occluding_edges, m_lines);
-
-    //Points Intersaction
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_vertices(new pcl::PointCloud<pcl::PointXYZ>);
-    getIntersactions(m_lines, cloud_vertices);
-
-    //Get distances and diagonal vector, return 4 vertices inside the original ones
-    scaleHull(cloud_vertices, m_cloud_vertices_scaled);
-
-    cloudRGBtoXYZ(m_source, m_source_bw);
-    //Add points on the ground (projection of the 4 vertices)
-    addGroundPoints(m_source_bw, m_cloud_vertices_scaled);
-
-    //Segmentation based on Convex Hull Crop
-    convexHullCrop(m_source_bw, m_cloud_vertices_scaled, m_hull_result);
-
-    cloudXYZtoRGB(m_hull_result, cloud_grasp);
-
-    return true;
-}
-
-void BinSegmentation::visualizeNoSpin(bool showLines, bool showVertices)
-{
-    //PointCloud Visualization
-    pcl::visualization::PCLVisualizer viz("PCL Segmentation");
-    viz.addCoordinateSystem(0.1, "coord", 0);
-    viz.addPointCloud(m_source, "m_source");
-
-    viz.addPointCloud(m_boundary_edges, "boundary_edges");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 1.0f, 0.0f, "boundary_edges");
-
-    viz.addPointCloud(m_occluding_edges, "occluding_edges");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 0.0f, 1.0f, "occluding_edges");
-
-    if (showLines)
-    {
-        viz.addLine(m_lines[0], "line0", 0);
-        viz.addLine(m_lines[1], "line1", 0);
-        viz.addLine(m_lines[2], "line2", 0);
-        viz.addLine(m_lines[3], "line3", 0);
-    }
-
-    if (showVertices)
-    {
-        for (int i = 0; i < m_cloud_vertices_scaled->points.size(); i++)
-        {
-            std::string name = "point" + std::to_string(i);
-            viz.addSphere(m_cloud_vertices_scaled->points[i], 0.01, 1.0f, 0.0f, 0.0f, name, 0);
-        }
-    }
-
-    //viz.addPointCloud(cloud_vertices, "cloud_vertexes");
-    //viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 0.0f, 0.0f, "cloud_vertexes");
-
-    viz.addPointCloud(m_hull_result, "hull_result");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 0.0f, "hull_result");
-}
-
-void BinSegmentation::visualizeWithSpin(bool showLines, bool showVertices)
+void BinSegmentation::visualize(bool showLines = true, bool showVertices = true, bool spin = true)
 {
     //PointCloud Visualization
     pcl::visualization::PCLVisualizer viz("PCL Segmentation");
@@ -195,7 +143,8 @@ void BinSegmentation::visualizeWithSpin(bool showLines, bool showVertices)
     viz.addPointCloud(m_hull_result, "hull_result");
     viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 0.0f, "hull_result");
 
-    viz.spin();
+    if (spin)
+        viz.spin();
 }
 
 bool BinSegmentation::computeEdges(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr &occluding_edges,
@@ -382,6 +331,7 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
             }
         }
     }
+    //PCL_INFO("lineWithLineIntersection done\n");
 
     // remove points that are zero or that are duplicate version of existing ones.
     for (int i = 0; i < points.size(); i++)
@@ -389,21 +339,24 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
         if (points[i].isZero())
             points.erase(points.begin() + i);
     }
+
     for (int i = 0; i < points.size(); i++)
     {
         for (int k = 0; k < points.size(); k++)
         {
             if (i != k)
             {
-                if (points[i].isApprox(points[k], 0.005))
+                if (points[i].isApprox(points[k], 0.05))
                     points.erase(points.begin() + k);
             }
         }
     }
+    //PCL_INFO("purge done\n");
 
-    bool success = checkLinesOrthogonal(lines, points);
+    //bool success = checkLinesOrthogonal(lines, points);
     //if (!success)
     //return false;
+    //PCL_INFO("checkLinesOrthogonal DONE\n");
 
     //add points to pointcloud performing conversion from Vector4f to PointXYZ
     pcl::PointXYZ p_temp;
@@ -411,6 +364,7 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
     {
         p_temp.getVector4fMap() = points[i];
         cloud_vertices->push_back(p_temp);
+        //std::cout << p_temp.x << ", " << p_temp.y << ", " << p_temp.z << std::endl;
     }
 
     if (cloud_vertices->size() != 4)
@@ -497,10 +451,65 @@ void BinSegmentation::scaleHull(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_verti
     }
 }
 
-bool BinSegmentation::addGroundPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_vertices)
+bool BinSegmentation::addGroundPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
+                                      pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_vertices,
+                                      pcl::ModelCoefficients::Ptr &plane)
 {
+
+    if (plane->values.size() != 4)
+    {
+        PCL_WARN("Plane coefficients something wrong! size: %d", plane->values.size());
+        return false;
+    }
+
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_projected(new pcl::PointCloud<pcl::PointXYZ>);
 
+    // Create the filtering object
+    pcl::ProjectInliers<pcl::PointXYZ> proj;
+    proj.setModelType(pcl::SACMODEL_PLANE);
+    proj.setInputCloud(cloud_vertices);
+    proj.setModelCoefficients(plane);
+    proj.filter(*cloud_projected);
+
+    for (int i = 0; i < cloud_projected->size(); i++)
+        cloud_vertices->push_back(cloud_projected->points[i]);
+
+    return true;
+}
+
+void BinSegmentation::convexHullCrop(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_bw,
+                                     pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_vertices,
+                                     pcl::PointCloud<pcl::PointXYZ>::Ptr &hull_result)
+{
+    pcl::CropHull<pcl::PointXYZ> cropHullFilter;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_hull(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr points_hull(new pcl::PointCloud<pcl::PointXYZ>);
+    std::vector<pcl::Vertices> hullPolygons;
+
+    // setup hull filter
+    pcl::ConvexHull<pcl::PointXYZ> cHull;
+    cHull.setInputCloud(cloud_vertices);
+    cHull.reconstruct(*points_hull, hullPolygons);
+
+    cropHullFilter.setHullIndices(hullPolygons);
+    cropHullFilter.setHullCloud(points_hull);
+    //cropHullFilter.setDim(2);
+    cropHullFilter.setCropOutside(true);
+
+    //filter points
+    cropHullFilter.setInputCloud(cloud_bw);
+    cropHullFilter.filter(*hull_result);
+
+    std::cout << std::endl;
+    std::cout << "hull result points: " << hull_result->points.size() << std::endl;
+    //for (int i = 0; i < hull_result->points.size(); i++)
+    //{
+    //    std::cout << hull_result->points[i] << std::endl;
+    //}
+}
+
+pcl::ModelCoefficients::Ptr BinSegmentation::planeModel(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud)
+{
     pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
     pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
     // Create the segmentation object
@@ -515,53 +524,79 @@ bool BinSegmentation::addGroundPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud
     seg.setInputCloud(cloud);
     seg.segment(*inliers, *coefficients);
 
-    // Create the filtering object
-    pcl::ProjectInliers<pcl::PointXYZ> proj;
-    proj.setModelType(pcl::SACMODEL_PLANE);
-    proj.setInputCloud(cloud_vertices);
-    proj.setModelCoefficients(coefficients);
-    proj.filter(*cloud_projected);
-
-    for (int i = 0; i < cloud_projected->size(); i++)
-        cloud_vertices->push_back(cloud_projected->points[i]);
-
-    if (coefficients->values.size() != 4)
-    {
-        PCL_WARN("Plane coefficients something wrong! size: %d", coefficients->values.size());
-        return false;
-    }
     m_plane = coefficients;
-    return true;
+
+    return coefficients;
 }
 
-void BinSegmentation::convexHullCrop(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_bw,
-                                     pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_vertices,
-                                     pcl::PointCloud<pcl::PointXYZ>::Ptr &hull_result)
+// find multiple planes parallel to the ground plane and segment the cloud keeping only those points that
+// belongs to the plane which is the most distant from the ground.
+void BinSegmentation::segmentOccludingEdges(pcl::PointCloud<pcl::PointXYZ>::Ptr &occluding_edges,
+                                            pcl::ModelCoefficients::Ptr &plane)
 {
-    pcl::CropHull<pcl::PointXYZ> cropHullFilter;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_hull(new pcl::PointCloud<pcl::PointXYZ>);
-    pcl::PointCloud<pcl::PointXYZ>::Ptr points_hull(new pcl::PointCloud<pcl::PointXYZ>);
-    std::vector<pcl::Vertices> hullPolygons;
 
-    // setup hull filter
-    pcl::ConvexHull<pcl::PointXYZ>
-        cHull;
-    cHull.setInputCloud(cloud_vertices); //occluding_edges
-    cHull.reconstruct(*points_hull, hullPolygons);
+    if (plane->values.size() != 4)
+    {
+        PCL_ERROR("model coefficient plane wrong");
+        return;
+    }
+    // axis wrt we want to find a perpendicular plane
+    Eigen::Vector3f plane_vec;
+    plane_vec.x() = plane->values[0];
+    plane_vec.y() = plane->values[1];
+    plane_vec.z() = plane->values[2];
 
-    cropHullFilter.setHullIndices(hullPolygons);
-    cropHullFilter.setHullCloud(points_hull);
-    cropHullFilter.setDim(2);            // if you uncomment this, it will work
-    cropHullFilter.setCropOutside(true); // this will remove points inside the hull
+    int cloudSize = (int)occluding_edges->size();
+    std::vector<pcl::ModelCoefficients::Ptr> models;
+    std::vector<pcl::PointIndices::Ptr> modelsInliers;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr filtered(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::copyPointCloud(*occluding_edges, *filtered);
 
-    //filter points
-    cropHullFilter.setInputCloud(cloud_bw);
-    cropHullFilter.filter(*hull_result);
+    pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
+    pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
 
-    std::cout << std::endl;
-    std::cout << "hull result points: " << hull_result->points.size() << std::endl;
-    //for (int i = 0; i < hull_result->points.size(); i++)
-    //{
-    //    std::cout << hull_result->points[i] << std::endl;
-    //}
+    // Create the segmentation object
+    pcl::SACSegmentation<pcl::PointXYZ> seg;
+    // Mandatory
+    seg.setModelType(pcl::SACMODEL_PERPENDICULAR_PLANE);
+    seg.setMethodType(pcl::SAC_RANSAC);
+    seg.setAxis(plane_vec);
+    seg.setEpsAngle(0.1);
+    seg.setDistanceThreshold(0.03);
+    seg.setMaxIterations(200);
+    while (filtered->size() > 0.1 * cloudSize)
+    {
+        seg.setInputCloud(filtered);
+        seg.segment(*inliers, *coefficients);
+
+        // Extract the inliers
+        pcl::ExtractIndices<pcl::PointXYZ> extract;
+        extract.setInputCloud(filtered);
+        extract.setIndices(inliers);
+        extract.setNegative(true);
+        extract.filter(*filtered);
+
+        models.push_back(coefficients);
+        modelsInliers.push_back(inliers);
+        coefficients.reset(new pcl::ModelCoefficients);
+        inliers.reset(new pcl::PointIndices);
+    }
+
+    //std::cout << plane->values[3] << std::endl;
+    //for (int i = 0; i < models.size(); i++)
+    //    std::cout << models[i]->values[3] << std::endl;
+
+    std::vector<double> diff;
+    for (int i = 0; i < models.size(); i++)
+    {
+        diff.push_back(abs(plane->values[3] - models[i]->values[3]));
+    }
+    double maxDiffIndex = std::max_element(diff.begin(), diff.end()) - diff.begin();
+
+    // Extract the true contour of the bin
+    pcl::ExtractIndices<pcl::PointXYZ> extract;
+    extract.setInputCloud(occluding_edges);
+    extract.setIndices(modelsInliers.at(maxDiffIndex));
+    extract.setNegative(false);
+    extract.filter(*occluding_edges);
 }
