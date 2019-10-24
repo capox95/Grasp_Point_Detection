@@ -72,9 +72,9 @@ void PointPose::visualizeGrasp()
 {
     pcl::visualization::PCLVisualizer viz("PCL Cloud Result");
     //viz.addCoordinateSystem(0.1);
-    viz.setBackgroundColor(0.0, 0.0, 0.5);
+    viz.setBackgroundColor(1.0f, 1.0f, 1.0f);
     viz.addPointCloud<pcl::PointXYZRGB>(m_source, "source");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 1.0f, "source");
+    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.2f, 0.0f, 1.0f, "source");
 
     viz.addPointCloud<pcl::PointXYZ>(m_cloud_grasp, "cloud_grasp");
     viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_grasp");

@@ -115,9 +115,9 @@ void BinSegmentation::visualize(bool showLines = true, bool showVertices = true,
     //PointCloud Visualization
     pcl::visualization::PCLVisualizer vizSource("PCL Source");
     vizSource.addCoordinateSystem(0.1, "coord", 0);
-    vizSource.setBackgroundColor(0.0f, 0.0f, 0.5f);
+    vizSource.setBackgroundColor(1.0f, 1.0f, 1.0f);
     vizSource.addPointCloud(m_source, "m_source");
-    vizSource.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 1.0f, "m_source");
+    vizSource.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.2f, 0.0f, 1.0f, "m_source");
 
     if (showLines)
     {
@@ -138,9 +138,9 @@ void BinSegmentation::visualize(bool showLines = true, bool showVertices = true,
 
     pcl::visualization::PCLVisualizer viz("PCL Segmentation");
     //viz.addCoordinateSystem(0.1, "coord", 0);
-    viz.setBackgroundColor(0.0f, 0.0f, 0.5f);
+    viz.setBackgroundColor(1.0f, 1.0f, 1.0f);
     viz.addPointCloud(m_source, "m_source");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 1.0f, "m_source");
+    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.2f, 0.0f, 1.0f, "m_source");
 
     //viz.addPointCloud(m_boundary_edges, "boundary_edges");
     //viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 1.0f, 0.0f, "boundary_edges");

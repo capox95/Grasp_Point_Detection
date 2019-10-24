@@ -142,14 +142,14 @@ void EntropyFilter::visualizeAll(bool flag)
 {
 
     pcl::visualization::PCLVisualizer vizSource("PCL Source Cloud");
-    vizSource.setBackgroundColor(0.0, 0.0, 0.5);
+    vizSource.setBackgroundColor(1.0f, 1.0f, 1.0f);
     vizSource.addPointCloud<pcl::PointXYZRGB>(m_source, "m_source");
-    vizSource.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 0.0f, "m_source");
+    vizSource.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 1.0f, 0.0f, "m_source");
 
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_curvature(new pcl::PointCloud<pcl::PointXYZI>);
     colorMapCurvature(cloud_curvature);
     pcl::visualization::PCLVisualizer vizC("PCL Curvature Map");
-    vizC.setBackgroundColor(0.0, 0.0, 0.5);
+    vizC.setBackgroundColor(1.0f, 1.0f, 1.0f);
     pcl::visualization::PointCloudColorHandlerGenericField<pcl::PointXYZI> intensity_distributionCurvature(cloud_curvature, "intensity");
     vizC.addPointCloud<pcl::PointXYZI>(cloud_curvature, intensity_distributionCurvature, "cloud_mapCurvature");
     vizC.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_mapCurvature");
@@ -157,7 +157,7 @@ void EntropyFilter::visualizeAll(bool flag)
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_entropy(new pcl::PointCloud<pcl::PointXYZI>);
     colorMapEntropy(cloud_entropy);
     pcl::visualization::PCLVisualizer vizE("PCL Entropy Map");
-    vizE.setBackgroundColor(0.0, 0.0, 0.5);
+    vizE.setBackgroundColor(1.0f, 1.0f, 1.0f);
     pcl::visualization::PointCloudColorHandlerGenericField<pcl::PointXYZI> intensity_distributionEntropy(cloud_entropy, "intensity");
     vizE.addPointCloud<pcl::PointXYZI>(cloud_entropy, intensity_distributionEntropy, "cloud_mapEntropy");
     vizE.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_mapEntropy");
@@ -167,34 +167,34 @@ void EntropyFilter::visualizeAll(bool flag)
         pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_inclination(new pcl::PointCloud<pcl::PointXYZI>);
         colorMapInclination(cloud_inclination);
         pcl::visualization::PCLVisualizer vizI("PCL Inclination Map");
-        vizI.setBackgroundColor(0.0, 0.0, 0.5);
+        vizI.setBackgroundColor(1.0f, 1.0f, 1.0f);
         pcl::visualization::PointCloudColorHandlerGenericField<pcl::PointXYZI> intensity_distributionInclination(cloud_inclination, "intensity");
         vizI.addPointCloud<pcl::PointXYZI>(cloud_inclination, intensity_distributionInclination, "sample cloud_mapInclination");
 
         pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_azimuth(new pcl::PointCloud<pcl::PointXYZI>);
         colorMapAzimuth(cloud_azimuth);
         pcl::visualization::PCLVisualizer vizA("PCL Azimuth Map");
-        vizA.setBackgroundColor(0.0, 0.0, 0.5);
+        vizA.setBackgroundColor(1.0f, 1.0f, 1.0f);
         pcl::visualization::PointCloudColorHandlerGenericField<pcl::PointXYZI> intensity_distributionAzimuth(cloud_azimuth, "intensity");
         vizA.addPointCloud<pcl::PointXYZI>(cloud_azimuth, intensity_distributionAzimuth, "sample cloud_mapAzimuth");
     }
 
     pcl::visualization::PCLVisualizer vizDepth("PCL Depth Map");
-    vizDepth.setBackgroundColor(0.0, 0.0, 0.5);
+    vizDepth.setBackgroundColor(1.0f, 1.0f, 1.0f);
     pcl::visualization::PointCloudColorHandlerGenericField<pcl::PointXYZI> intensity_distributionDepth(m_cloud_depth, "intensity");
     vizDepth.addPointCloud<pcl::PointXYZI>(m_cloud_depth, intensity_distributionDepth, "cloud_depth");
     vizDepth.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_depth");
     //viz2.addPlane(*coefficients, "plane");
 
     pcl::visualization::PCLVisualizer vizConvexity("PCL Convexity Map");
-    vizConvexity.setBackgroundColor(0.0, 0.0, 0.5);
+    vizConvexity.setBackgroundColor(1.0f, 1.0f, 1.0f);
     pcl::visualization::PointCloudColorHandlerGenericField<pcl::PointXYZI> intensity_distribution(m_cloud_convexity, "intensity");
     vizConvexity.addPointCloud<pcl::PointXYZI>(m_cloud_convexity, intensity_distribution, "cloud_convexity");
     vizConvexity.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 5, "cloud_convexity");
     //viz.addPointCloudNormals<pcl::PointXYZ, pcl::Normal>(cloud_small, normals_small, 1, 0.01);
 
     pcl::visualization::PCLVisualizer vizCombined("PCL Combined Map");
-    vizCombined.setBackgroundColor(0.0, 0.0, 0.5);
+    vizCombined.setBackgroundColor(1.0f, 1.0f, 1.0f);
     pcl::visualization::PointCloudColorHandlerGenericField<pcl::PointXYZI> intensity_distributionCombinede(m_cloud_combined, "intensity");
     vizCombined.addPointCloud<pcl::PointXYZI>(m_cloud_combined, intensity_distributionCombinede, "m_cloud_combined");
     vizCombined.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 5, "m_cloud_combined");
