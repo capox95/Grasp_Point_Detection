@@ -369,6 +369,11 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
     {
         if (points[i].isZero())
             points.erase(points.begin() + i);
+
+        // added because sometimes .isZero() does not work properly
+        if (points[i].x() == 0 && points[i].y() == 0 && points[i].z() == 0 && points[i].w() == 0)
+            points.erase(points.begin() + i);
+
     }
 
     for (int i = 0; i < points.size(); i++)
@@ -385,13 +390,18 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
     //PCL_INFO("purge done\n");
 
     if (points.size() != 4)
+    {
+        PCL_INFO("points size different than 4, they are: %d\n", points.size());
+        for(Eigen::Vector4f p : points)
+            std::cout << p << std::endl;
         return false;
+    }
 
     bool success = checkLinesOrthogonal(lines, points);
-    if (!success)
+    if (!success){
+        PCL_INFO("checkLinesOrthogonal FAILS\n");
         return false;
-    //PCL_INFO("checkLinesOrthogonal DONE\n");
-
+    }
     //add points to pointcloud performing conversion from Vector4f to PointXYZ
     pcl::PointXYZ p_temp;
     for (int i = 0; i < points.size(); i++)
@@ -555,7 +565,7 @@ pcl::ModelCoefficients::Ptr BinSegmentation::planeModel(pcl::PointCloud<pcl::Poi
     // Create the segmentation object
     pcl::SACSegmentation<pcl::PointXYZ> seg;
     // Optional
-    seg.setOptimizeCoefficients(true);
+    seg.setOptimizeCoefficients(false);
     // Mandatory
     seg.setModelType(pcl::SACMODEL_PLANE);
     seg.setMethodType(pcl::SAC_RANSAC);

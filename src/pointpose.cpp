@@ -133,26 +133,23 @@ void PointPose::getCoordinateFrame(Eigen::Vector3f &centroid, Eigen::Matrix3f &r
     pcl::PointXYZ centroidXYZ;
     centroidXYZ.getVector3fMap() = centroid;
 
-    pcl::PointXYZ PointX = pcl::PointXYZ((centroid(0) + rotation.col(0)(0)),
+    pcl::PointXYZ PointY = pcl::PointXYZ((centroid(0) + rotation.col(0)(0)),
                                          (centroid(1) + rotation.col(0)(1)),
                                          (centroid(2) + rotation.col(0)(2)));
 
-    pcl::PointXYZ PointY = pcl::PointXYZ((centroid(0) + rotation.col(1)(0)),
+    pcl::PointXYZ PointZ = pcl::PointXYZ((centroid(0) + rotation.col(1)(0)),
                                          (centroid(1) + rotation.col(1)(1)),
                                          (centroid(2) + rotation.col(1)(2)));
 
-    pcl::PointXYZ PointZ = pcl::PointXYZ((centroid(0) + rotation.col(2)(0)),
+    pcl::PointXYZ PointX = pcl::PointXYZ((centroid(0) + rotation.col(2)(0)),
                                          (centroid(1) + rotation.col(2)(1)),
                                          (centroid(2) + rotation.col(2)(2)));
-    if (PointZ.z < centroid(2))
+    if (PointX.z < centroid(2))
     {
-        PointZ = pcl::PointXYZ((centroid(0) - rotation.col(2)(0)),
+        PointX = pcl::PointXYZ((centroid(0) - rotation.col(2)(0)),
                                (centroid(1) - rotation.col(2)(1)),
                                (centroid(2) - rotation.col(2)(2)));
     }
-
-    std::cout << rotation.col(2) << std::endl;
-    std::cout << PointZ << std::endl;
 
     m_pointsCoordinateFrame.clear();
     m_pointsCoordinateFrame.push_back(centroidXYZ);
