@@ -34,6 +34,8 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr EntropyFilter::getCloudSeg() { return m_clou
 
 pcl::ModelCoefficients::Ptr EntropyFilter::getPlaneForDepth() { return m_plane; }
 
+float EntropyFilter::getDepthValue() { return m_depth_interval; }
+
 bool EntropyFilter::compute(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_out)
 {
     downsample(m_source, m_leafsize, m_cloud_downsample);

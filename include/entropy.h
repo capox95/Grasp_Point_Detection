@@ -65,6 +65,8 @@ public:
 
     pcl::ModelCoefficients::Ptr getPlaneForDepth();
 
+    float getDepthValue();
+
     bool compute(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_out);
 
     //
