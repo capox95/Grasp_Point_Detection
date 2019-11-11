@@ -49,7 +49,7 @@ int main(int argc, char **argv)
     EntropyFilter ef;
     ef.setInputCloud(cloud_grasp);
     ef.setDownsampleLeafSize(0.005);
-    ef.setEntropyThreshold(0.8);
+    ef.setEntropyThreshold(0.65);
     ef.setKLocalSearch(500);        // Nearest Neighbour Local Search
     ef.setCurvatureThreshold(0.01); //Curvature Threshold for the computation of Entropy
     ef.setDepthThreshold(0.03);

@@ -1,3 +1,5 @@
+#include <string>
+
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/common/common.h>
@@ -67,7 +69,9 @@ bool BinSegmentation::compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_gras
         PCL_INFO("Edge Detection DONE \n");
 
     pcl::ModelCoefficients::Ptr plane_ref = planeModel(m_source_bw);
+    PCL_INFO("Plane Fitting DONE \n");
     segmentOccludingEdges(m_occluding_edges, plane_ref);
+    PCL_INFO("Occluding Edges Segmentation DONE \n");
 
     //RANSAC Lines Detection
     bool ransac_success = ransacLineDetection(m_occluding_edges, m_lines);
@@ -112,6 +116,17 @@ bool BinSegmentation::compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_gras
 
 void BinSegmentation::visualize(bool showLines = true, bool showVertices = true, bool spin = true)
 {
+
+    // Plane
+    pcl::visualization::PCLVisualizer vizPlane("PCL Plane");
+    vizPlane.setBackgroundColor(0.0f, 0.0f, 0.5f);
+    vizPlane.addPointCloud(m_source, "m_source");
+    //vizPlane.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.5f, 0.0f, 0.5f, "m_source");
+    vizPlane.addPlane(*m_plane, "plane");
+    vizPlane.addPointCloud(m_occluding_edges, "occluding_edges");
+    vizPlane.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 0.0f, 0.0f, "occluding_edges");
+    vizPlane.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3.0f, "occluding_edges");
+
     //PointCloud Visualization
     pcl::visualization::PCLVisualizer vizSource("PCL Source");
     vizSource.addCoordinateSystem(0.1, "coord", 0);
@@ -373,7 +388,6 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
         // added because sometimes .isZero() does not work properly
         if (points[i].x() == 0 && points[i].y() == 0 && points[i].z() == 0 && points[i].w() == 0)
             points.erase(points.begin() + i);
-
     }
 
     for (int i = 0; i < points.size(); i++)
@@ -392,16 +406,18 @@ bool BinSegmentation::getIntersactions(std::vector<pcl::ModelCoefficients> &line
     if (points.size() != 4)
     {
         PCL_INFO("points size different than 4, they are: %d\n", points.size());
-        for(Eigen::Vector4f p : points)
+        for (Eigen::Vector4f p : points)
             std::cout << p << std::endl;
         return false;
     }
 
     bool success = checkLinesOrthogonal(lines, points);
-    if (!success){
+    if (!success)
+    {
         PCL_INFO("checkLinesOrthogonal FAILS\n");
         return false;
     }
+
     //add points to pointcloud performing conversion from Vector4f to PointXYZ
     pcl::PointXYZ p_temp;
     for (int i = 0; i < points.size(); i++)
@@ -596,7 +612,6 @@ void BinSegmentation::segmentOccludingEdges(pcl::PointCloud<pcl::PointXYZ>::Ptr 
     plane_vec.y() = plane->values[1];
     plane_vec.z() = plane->values[2];
 
-    int cloudSize = (int)occluding_edges->size();
     std::vector<pcl::ModelCoefficients::Ptr> models;
     std::vector<pcl::PointIndices::Ptr> modelsInliers;
     pcl::PointCloud<pcl::PointXYZ>::Ptr filtered(new pcl::PointCloud<pcl::PointXYZ>);
@@ -607,6 +622,7 @@ void BinSegmentation::segmentOccludingEdges(pcl::PointCloud<pcl::PointXYZ>::Ptr 
 
     // Create the segmentation object
     pcl::SACSegmentation<pcl::PointXYZ> seg;
+    seg.setOptimizeCoefficients(false);
     // Mandatory
     seg.setModelType(pcl::SACMODEL_PERPENDICULAR_PLANE);
     seg.setMethodType(pcl::SAC_RANSAC);
@@ -614,7 +630,9 @@ void BinSegmentation::segmentOccludingEdges(pcl::PointCloud<pcl::PointXYZ>::Ptr 
     seg.setEpsAngle(0.1);
     seg.setDistanceThreshold(0.03);
     seg.setMaxIterations(200);
-    while (filtered->size() > 0.1 * cloudSize)
+
+    int last_inliers_size = 1;
+    while (last_inliers_size > 0)
     {
         seg.setInputCloud(filtered);
         seg.segment(*inliers, *coefficients);
@@ -626,27 +644,53 @@ void BinSegmentation::segmentOccludingEdges(pcl::PointCloud<pcl::PointXYZ>::Ptr 
         extract.setNegative(true);
         extract.filter(*filtered);
 
+        //std::cout << "inliers size: " << inliers->indices.size()
+        //          << "  cloud size: " << filtered->size() << std::endl;
+
+        last_inliers_size = inliers->indices.size();
+
         models.push_back(coefficients);
         modelsInliers.push_back(inliers);
         coefficients.reset(new pcl::ModelCoefficients);
         inliers.reset(new pcl::PointIndices);
     }
 
-    //std::cout << plane->values[3] << std::endl;
-    //for (int i = 0; i < models.size(); i++)
-    //    std::cout << models[i]->values[3] << std::endl;
+    std::cout << "number of found planes: " << models.size() << std::endl;
 
-    std::vector<double> diff;
+    // check if planes are parallel. If not, remove them!
+    Eigen::Vector3f v1 = plane_vec;
     for (int i = 0; i < models.size(); i++)
     {
-        diff.push_back(abs(plane->values[3] - models[i]->values[3]));
+        Eigen::Vector3f v2;
+        v2.x() = models[i]->values[0];
+        v2.y() = models[i]->values[1];
+        v2.z() = models[i]->values[2];
+        double angle = acos(v1.dot(v2));
+
+        if (!(angle < 0.2 || (angle > 3.0 && angle < 3.2)))
+        {
+            PCL_WARN("Plane index %d not parallel. value: %f\n", i, angle);
+            models.erase(models.begin() + i);
+            modelsInliers.erase(modelsInliers.begin() + i);
+        }
+    }
+
+    std::vector<double> diff;
+    float plane_d = fabs(plane->values[3]);
+    for (int i = 0; i < models.size(); i++)
+    {
+        diff.push_back(plane_d - fabs(models[i]->values[3]));
     }
     double maxDiffIndex = std::max_element(diff.begin(), diff.end()) - diff.begin();
+    std::cout << "max diff plane index: " << maxDiffIndex << std::endl;
 
     // Extract the true contour of the bin
+    int original_size = (int)occluding_edges->size();
     pcl::ExtractIndices<pcl::PointXYZ> extract;
     extract.setInputCloud(occluding_edges);
     extract.setIndices(modelsInliers.at(maxDiffIndex));
     extract.setNegative(false);
     extract.filter(*occluding_edges);
+
+    std::cout << "new occluding_edges cloud size: " << occluding_edges->size() << ", instead of " << original_size << std::endl;
 }

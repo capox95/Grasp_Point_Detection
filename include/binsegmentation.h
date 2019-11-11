@@ -33,7 +33,7 @@ public:
                         m_hull_result(new pcl::PointCloud<pcl::PointXYZ>),
                         m_plane(new pcl::ModelCoefficients)
     {
-        m_sqr_eps = 0.02;
+        m_sqr_eps = 0.03;
     }
 
     void setInputCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud);

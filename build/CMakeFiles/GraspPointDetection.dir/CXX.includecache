@@ -21,6 +21,8 @@ pcl/point_cloud.h
 -
 
 /home/alessio/dev/GitRepo/src/binsegmentation.cpp
+string
+-
 pcl/point_cloud.h
 -
 pcl/point_types.h
