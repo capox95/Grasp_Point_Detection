@@ -18,7 +18,7 @@ private:
     pcl::ModelCoefficients::Ptr m_plane;
 
     int m_num_lines;
-    float m_scale_factor, m_max_bin_height;
+    float m_padding_distance, m_max_bin_height;
     double m_sqr_eps; //  maximum allowable distance to the true solution lineWithLineIntersection (need to be taken squared) and
                       // maximum distance between point and line in checkOrthogonality
     std::vector<pcl::ModelCoefficients> m_lines;
@@ -43,7 +43,7 @@ public:
 
     void setNumberLines(int number);
 
-    void setScaleFactorHullBorders(float scale);
+    void setPaddingDistance(float scale);
 
     void setMaxBinHeight(float value);
 

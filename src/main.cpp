@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     BinSegmentation bin;
     bin.setInputCloud(source);
     bin.setNumberLines(4);
-    bin.setScaleFactorHullBorders(0.08);
+    bin.setPaddingDistance(0.05); // 5cm from the bin walls
     bin.setMaxBinHeight(0.3);
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_grasp(new pcl::PointCloud<pcl::PointXYZRGB>);

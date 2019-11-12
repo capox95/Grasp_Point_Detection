@@ -28,7 +28,7 @@ void BinSegmentation::setInputCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &clou
 
 void BinSegmentation::setNumberLines(int number) { m_num_lines = number; }
 
-void BinSegmentation::setScaleFactorHullBorders(float scale) { m_scale_factor = scale; }
+void BinSegmentation::setPaddingDistance(float scale) { m_padding_distance = scale; }
 
 void BinSegmentation::setMaxBinHeight(float value) { m_max_bin_height = value; };
 
@@ -513,13 +513,14 @@ void BinSegmentation::scaleHull(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_verti
         vd[i].vector = vector_diag;
     }
 
-    //new point computation, at 10% distance from original one wrt the diagonal
+    //new point computation, at diag_distance from original one wrt the diagonal
+    float diag_distance = m_padding_distance * sqrt(2);
     pcl::PointXYZ crop_point;
     for (int i = 0; i < cloud_vertices->size(); i++)
     {
-        crop_point.x = cloud_vertices->points[i].x - m_scale_factor * vd[i].vector.x();
-        crop_point.y = cloud_vertices->points[i].y - m_scale_factor * vd[i].vector.y();
-        crop_point.z = cloud_vertices->points[i].z - m_scale_factor * vd[i].vector.z();
+        crop_point.x = cloud_vertices->points[i].x - diag_distance * vd[i].vector.x();
+        crop_point.y = cloud_vertices->points[i].y - diag_distance * vd[i].vector.y();
+        crop_point.z = cloud_vertices->points[i].z - diag_distance * vd[i].vector.z();
         hull_result->points.push_back(crop_point);
     }
 
@@ -646,28 +647,33 @@ void BinSegmentation::segmentOccludingEdges(pcl::PointCloud<pcl::PointXYZ>::Ptr 
     seg.setDistanceThreshold(0.03);
     seg.setMaxIterations(200);
 
-    int last_inliers_size = 1;
-    while (last_inliers_size > 0)
+    int iterNumber = 0;
+    while (iterNumber < 10)
     {
         seg.setInputCloud(filtered);
         seg.segment(*inliers, *coefficients);
 
-        // Extract the inliers
-        pcl::ExtractIndices<pcl::PointXYZ> extract;
-        extract.setInputCloud(filtered);
-        extract.setIndices(inliers);
-        extract.setNegative(true);
-        extract.filter(*filtered);
+        if (inliers->indices.size() != 0)
+        { // Extract the inliers
+            pcl::ExtractIndices<pcl::PointXYZ> extract;
+            extract.setInputCloud(filtered);
+            extract.setIndices(inliers);
+            extract.setNegative(true);
+            extract.filter(*filtered);
 
-        //std::cout << "inliers size: " << inliers->indices.size()
-        //          << "  cloud size: " << filtered->size() << std::endl;
+            //std::cout << "inliers size: " << inliers->indices.size()
+            //          << "  cloud size: " << filtered->size() << std::endl;
 
-        last_inliers_size = inliers->indices.size();
-
-        models.push_back(coefficients);
-        modelsInliers.push_back(inliers);
-        coefficients.reset(new pcl::ModelCoefficients);
-        inliers.reset(new pcl::PointIndices);
+            models.push_back(coefficients);
+            modelsInliers.push_back(inliers);
+            coefficients.reset(new pcl::ModelCoefficients);
+            inliers.reset(new pcl::PointIndices);
+        }
+        else
+        {
+            break;
+        }
+        iterNumber++;
     }
 
     std::cout << "number of found planes: " << models.size() << std::endl;
