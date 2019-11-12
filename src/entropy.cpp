@@ -26,13 +26,17 @@ void EntropyFilter::setDepthThreshold(float depth_th) { m_depth_threshold = dept
 
 void EntropyFilter::setAngleThresholdForConvexity(float angle_th) { m_angle_threshold = angle_th; }
 
+void EntropyFilter::setVerticesBinContour(pcl::PointCloud<pcl::PointXYZ>::Ptr vertices)
+{
+    m_top_vertices = vertices;
+    _flag_vertices = true;
+}
+
 pcl::PointCloud<pcl::PointXYZ>::Ptr EntropyFilter::getMLSCloud() { return m_mls_cloud; }
 
 pcl::PointCloud<pcl::Normal>::Ptr EntropyFilter::getMLSNormals() { return m_mls_normals; }
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr EntropyFilter::getCloudSeg() { return m_cloud_seg; }
-
-pcl::ModelCoefficients::Ptr EntropyFilter::getPlaneForDepth() { return m_plane; }
 
 float EntropyFilter::getDepthValue() { return m_depth_interval; }
 
@@ -43,10 +47,22 @@ bool EntropyFilter::compute(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_out)
     divideCloudNormals(m_mls_points, m_mls_cloud, m_mls_normals);
     getSpherical(m_mls_normals, m_spherical);
 
+    // depth interval estimation
+    if (_flag_vertices == true)
+    {
+        pcl::PointCloud<pcl::PointXYZ>::Ptr vertices(new pcl::PointCloud<pcl::PointXYZ>);
+        vertices = m_top_vertices;
+        computePlaneBottomBin(m_mls_cloud, vertices, m_plane);
+    }
+    else
+    {
+        computePlaneReference(m_mls_cloud, m_plane);
+    }
+
     m_depth_interval = getPointPlaneDistanceCloud(m_mls_cloud, m_cloud_depth, m_plane);
     if (m_depth_interval < m_depth_threshold) //less than 3 cm
     {
-        PCL_WARN("Depth interval very small, grasp may be not achievable! value: [%f mm]\n", m_depth_interval * 1000);
+        PCL_WARN("Depth interval very small, grasp is not achievable! value: [%f mm]\n", m_depth_interval * 1000);
         _flag_depth = true;
     }
     //downsampleCloudAndNormals(m_mls_cloud, m_mls_normals, 0.001, m_convexity_ready);
@@ -441,20 +457,6 @@ float EntropyFilter::getPointPlaneDistanceCloud(pcl::PointCloud<pcl::PointXYZ>::
                                                 pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud_out,
                                                 pcl::ModelCoefficients::Ptr &plane)
 {
-
-    pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
-    // Create the segmentation object
-    pcl::SACSegmentation<pcl::PointXYZ> seg;
-    // Optional
-    seg.setOptimizeCoefficients(true);
-    // Mandatory
-    seg.setModelType(pcl::SACMODEL_PLANE);
-    seg.setMethodType(pcl::SAC_RANSAC);
-    seg.setDistanceThreshold(0.01);
-
-    seg.setInputCloud(cloud);
-    seg.segment(*inliers, *plane);
-
     Eigen::Vector3f x0;
     Eigen::Vector3f n(plane->values[0], plane->values[1], plane->values[2]);
     float p = plane->values[3];
@@ -640,4 +642,83 @@ void EntropyFilter::combineConvexityAndCurvatureInfo(pcl::PointCloud<pcl::PointX
         cloud_map->points[i].y = convexity->points[i].y;
         cloud_map->points[i].z = convexity->points[i].z;
     }
+}
+
+void EntropyFilter::computePlaneReference(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud, pcl::ModelCoefficients::Ptr &plane)
+{
+    pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
+    // Create the segmentation object
+    pcl::SACSegmentation<pcl::PointXYZ> seg;
+    // Optional
+    seg.setOptimizeCoefficients(true);
+    // Mandatory
+    seg.setModelType(pcl::SACMODEL_PLANE);
+    seg.setMethodType(pcl::SAC_RANSAC);
+    seg.setDistanceThreshold(0.01);
+
+    seg.setInputCloud(cloud);
+    seg.segment(*inliers, *plane);
+}
+
+void EntropyFilter::computePlaneBottomBin(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
+                                          pcl::PointCloud<pcl::PointXYZ>::Ptr &vertices,
+                                          pcl::ModelCoefficients::Ptr &plane)
+{
+    pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
+    // Create the segmentation object
+    pcl::SACSegmentation<pcl::PointXYZ> seg;
+    // Optional
+    seg.setOptimizeCoefficients(true);
+    // Mandatory
+    seg.setModelType(pcl::SACMODEL_PLANE);
+    seg.setMethodType(pcl::SAC_RANSAC);
+    seg.setDistanceThreshold(0.01);
+
+    seg.setInputCloud(vertices);
+    seg.segment(*inliers, *plane);
+
+    Eigen::Vector3f x0;
+    Eigen::Vector3f n(plane->values[0], plane->values[1], plane->values[2]);
+    float p = plane->values[3];
+    float distance, distance_max = 0;
+
+    for (int i = 0; i < cloud->size(); i++)
+    {
+        // D=n·x_0+p
+
+        if ((!std::isnan(cloud->points[i].x)) && (!std::isnan(cloud->points[i].y)) && (!std::isnan(cloud->points[i].z)))
+        {
+
+            x0 = cloud->points[i].getVector3fMap();
+            distance = n.dot(x0) + p;
+
+            if (distance > distance_max)
+                distance_max = distance;
+        }
+    }
+
+    Eigen::Vector3f bottom;
+    pcl::PointXYZ point;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr bottom_vertices(new pcl::PointCloud<pcl::PointXYZ>);
+    std::cout << vertices->size() << std::endl;
+    for (int i = 0; i < vertices->size(); i++)
+    {
+        bottom = vertices->points[i].getVector3fMap() + distance_max * n;
+
+        point.getVector3fMap() = bottom;
+        bottom_vertices->points.push_back(point);
+    }
+
+    std::cout << "distance max: " << distance_max << std::endl;
+    std::cout << "new bottom_vertices size: " << bottom_vertices->size() << std::endl;
+
+    // estimation new ground plane
+    seg.setModelType(pcl::SACMODEL_PLANE);
+    seg.setMethodType(pcl::SAC_RANSAC);
+    seg.setDistanceThreshold(0.01);
+    inliers.reset(new pcl::PointIndices);
+    plane.reset(new pcl::ModelCoefficients);
+
+    seg.setInputCloud(bottom_vertices);
+    seg.segment(*inliers, *plane);
 }

@@ -30,7 +30,11 @@ void BinSegmentation::setNumberLines(int number) { m_num_lines = number; }
 
 void BinSegmentation::setScaleFactorHullBorders(float scale) { m_scale_factor = scale; }
 
+void BinSegmentation::setMaxBinHeight(float value) { m_max_bin_height = value; };
+
 pcl::ModelCoefficients::Ptr BinSegmentation::getPlaneGroundPoints() { return m_plane; }
+
+pcl::PointCloud<pcl::PointXYZ>::Ptr BinSegmentation::getVerticesBinContour() { return m_top_vertices; }
 
 void BinSegmentation::cloudRGBtoXYZ(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_rgb, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_xyz)
 {
@@ -99,7 +103,9 @@ bool BinSegmentation::compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_gras
     //Get distances and diagonal vector, return 4 vertices inside the original ones
     scaleHull(cloud_vertices, m_cloud_vertices_scaled);
 
-    //Add points on the ground (projection of the 4 vertices)
+    pcl::copyPointCloud(*m_cloud_vertices_scaled, *m_top_vertices);
+
+    //Add points on the ground (projection of the 4 vertices
     bool ground_result = addGroundPoints(m_source_bw, m_cloud_vertices_scaled, plane_ref);
     if (!ground_result)
     {
@@ -108,6 +114,13 @@ bool BinSegmentation::compute(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_gras
     }
     //Segmentation based on Convex Hull Crop
     convexHullCrop(m_source_bw, m_cloud_vertices_scaled, m_hull_result);
+
+    pcl::ModelCoefficients::Ptr plane(new pcl::ModelCoefficients);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr vertices(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::copyPointCloud(*m_top_vertices, *vertices);
+
+    computePlaneBottomBin(m_hull_result, vertices, plane, m_max_bin_height);
+    convexHullCrop(m_hull_result, vertices, m_hull_result);
 
     cloudXYZtoRGB(m_hull_result, cloud_grasp);
 
@@ -509,6 +522,8 @@ void BinSegmentation::scaleHull(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_verti
         crop_point.z = cloud_vertices->points[i].z - m_scale_factor * vd[i].vector.z();
         hull_result->points.push_back(crop_point);
     }
+
+    std::cout << "hull result size: " << hull_result->size() << std::endl;
 }
 
 bool BinSegmentation::addGroundPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
@@ -693,4 +708,62 @@ void BinSegmentation::segmentOccludingEdges(pcl::PointCloud<pcl::PointXYZ>::Ptr 
     extract.filter(*occluding_edges);
 
     std::cout << "new occluding_edges cloud size: " << occluding_edges->size() << ", instead of " << original_size << std::endl;
+}
+
+void BinSegmentation::computePlaneBottomBin(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
+                                            pcl::PointCloud<pcl::PointXYZ>::Ptr &vertices,
+                                            pcl::ModelCoefficients::Ptr &plane, float max_bin_height)
+{
+    pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
+    // Create the segmentation object
+    pcl::SACSegmentation<pcl::PointXYZ> seg;
+    // Optional
+    seg.setOptimizeCoefficients(true);
+    // Mandatory
+    seg.setModelType(pcl::SACMODEL_PLANE);
+    seg.setMethodType(pcl::SAC_RANSAC);
+    seg.setDistanceThreshold(0.01);
+
+    seg.setInputCloud(vertices);
+    seg.segment(*inliers, *plane);
+
+    Eigen::Vector3f x0;
+    Eigen::Vector3f n(plane->values[0], plane->values[1], plane->values[2]);
+    float p = plane->values[3];
+    float distance, distance_max = 0;
+
+    for (int i = 0; i < cloud->size(); i++)
+    {
+        // D=n·x_0+p
+
+        if ((!std::isnan(cloud->points[i].x)) && (!std::isnan(cloud->points[i].y)) && (!std::isnan(cloud->points[i].z)))
+        {
+
+            x0 = cloud->points[i].getVector3fMap();
+            distance = n.dot(x0) + p;
+
+            if (distance > distance_max)
+                distance_max = distance;
+        }
+    }
+
+    //check max bin height
+    if (distance_max > max_bin_height)
+        distance_max = max_bin_height;
+
+    Eigen::Vector3f bottom;
+    pcl::PointXYZ point;
+    int verticesSize = (int)vertices->size();
+    std::cout << "vertices size: " << verticesSize << std::endl;
+
+    for (int i = 0; i < 4; i++)
+    {
+        bottom = vertices->points[i].getVector3fMap() + distance_max * n;
+
+        point.getVector3fMap() = bottom;
+        vertices->points.push_back(point);
+    }
+
+    std::cout << "distance max: " << distance_max << std::endl;
+    std::cout << "new vertices size: " << vertices->size() << std::endl;
 }

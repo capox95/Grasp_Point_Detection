@@ -6,6 +6,7 @@ class BinSegmentation
 private:
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr m_source;
     pcl::PointCloud<pcl::PointXYZ>::Ptr m_source_bw;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr m_top_vertices;
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr m_occluding_edges;
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr m_occluded_edges;
@@ -17,7 +18,7 @@ private:
     pcl::ModelCoefficients::Ptr m_plane;
 
     int m_num_lines;
-    float m_scale_factor;
+    float m_scale_factor, m_max_bin_height;
     double m_sqr_eps; //  maximum allowable distance to the true solution lineWithLineIntersection (need to be taken squared) and
                       // maximum distance between point and line in checkOrthogonality
     std::vector<pcl::ModelCoefficients> m_lines;
@@ -25,6 +26,7 @@ private:
 public:
     BinSegmentation() : m_source(new pcl::PointCloud<pcl::PointXYZRGB>),
                         m_source_bw(new pcl::PointCloud<pcl::PointXYZ>),
+                        m_top_vertices(new pcl::PointCloud<pcl::PointXYZ>),
                         m_occluding_edges(new pcl::PointCloud<pcl::PointXYZ>),
                         m_occluded_edges(new pcl::PointCloud<pcl::PointXYZRGBA>),
                         m_boundary_edges(new pcl::PointCloud<pcl::PointXYZRGBA>),
@@ -42,7 +44,11 @@ public:
 
     void setScaleFactorHullBorders(float scale);
 
+    void setMaxBinHeight(float value);
+
     pcl::ModelCoefficients::Ptr getPlaneGroundPoints();
+
+    pcl::PointCloud<pcl::PointXYZ>::Ptr getVerticesBinContour();
 
     void cloudRGBtoXYZ(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_rgb, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud_xyz);
 
@@ -82,4 +88,8 @@ private:
 
     void segmentOccludingEdges(pcl::PointCloud<pcl::PointXYZ>::Ptr &occluding_edges,
                                pcl::ModelCoefficients::Ptr &plane);
+
+    void computePlaneBottomBin(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
+                               pcl::PointCloud<pcl::PointXYZ>::Ptr &vertices,
+                               pcl::ModelCoefficients::Ptr &plane, float max_bin_height);
 };

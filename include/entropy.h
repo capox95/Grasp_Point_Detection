@@ -14,17 +14,17 @@ private:
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr m_source, m_cloud_downsample;
     pcl::PointCloud<pcl::PointNormal> m_mls_points;
     pcl::PointCloud<pcl::PointNormal>::Ptr m_convexity_ready;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr m_mls_cloud, m_cloud_seg;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr m_mls_cloud, m_cloud_seg, m_top_vertices;
     pcl::PointCloud<pcl::PointXYZI>::Ptr m_cloud_depth, m_cloud_convexity, m_cloud_combined;
     pcl::PointCloud<pcl::Normal>::Ptr m_mls_normals;
     pcl::PointCloud<Spherical>::Ptr m_spherical;
 
-    pcl::ModelCoefficients::Ptr m_plane;
+    pcl::ModelCoefficients::Ptr m_plane, m_plane_top;
 
     float m_leafsize, m_entropy_threshold, m_curvature_threshold,
         m_depth_interval, m_depth_threshold, m_angle_threshold, _max_entropy;
     int m_KNN;
-    bool _flag_depth;
+    bool _flag_depth, _flag_vertices;
 
 public:
     EntropyFilter() : m_source(new pcl::PointCloud<pcl::PointXYZRGB>),
@@ -33,14 +33,17 @@ public:
                       m_mls_normals(new pcl::PointCloud<pcl::Normal>),
                       m_spherical(new pcl::PointCloud<Spherical>),
                       m_cloud_seg(new pcl::PointCloud<pcl::PointXYZ>),
+                      m_top_vertices(new pcl::PointCloud<pcl::PointXYZ>),
                       m_cloud_depth(new pcl::PointCloud<pcl::PointXYZI>),
                       m_cloud_convexity(new pcl::PointCloud<pcl::PointXYZI>),
                       m_cloud_combined(new pcl::PointCloud<pcl::PointXYZI>),
                       m_convexity_ready(new pcl::PointCloud<pcl::PointNormal>),
-                      m_plane(new pcl::ModelCoefficients)
+                      m_plane(new pcl::ModelCoefficients),
+                      m_plane_top(new pcl::ModelCoefficients)
 
     {
         _flag_depth = false;
+        _flag_vertices = false;
     }
 
     void setInputCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud_in);
@@ -57,13 +60,13 @@ public:
 
     void setAngleThresholdForConvexity(float angle_th);
 
+    void setVerticesBinContour(pcl::PointCloud<pcl::PointXYZ>::Ptr vertices);
+
     pcl::PointCloud<pcl::PointXYZ>::Ptr getMLSCloud();
 
     pcl::PointCloud<pcl::Normal>::Ptr getMLSNormals();
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr getCloudSeg();
-
-    pcl::ModelCoefficients::Ptr getPlaneForDepth();
 
     float getDepthValue();
 
@@ -134,4 +137,9 @@ private:
     void combineConvexityAndCurvatureInfo(pcl::PointCloud<pcl::PointXYZI>::Ptr &convexity,
                                           pcl::PointCloud<pcl::Normal>::Ptr &normals,
                                           pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud_map);
+
+    void computePlaneReference(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud, pcl::ModelCoefficients::Ptr &plane);
+
+    void computePlaneBottomBin(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr &vertices,
+                               pcl::ModelCoefficients::Ptr &plane);
 };

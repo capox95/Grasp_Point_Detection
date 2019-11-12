@@ -29,6 +29,7 @@ int main(int argc, char **argv)
     bin.setInputCloud(source);
     bin.setNumberLines(4);
     bin.setScaleFactorHullBorders(0.08);
+    bin.setMaxBinHeight(0.3);
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_grasp(new pcl::PointCloud<pcl::PointXYZRGB>);
     bool bin_result = bin.compute(cloud_grasp);
@@ -36,6 +37,7 @@ int main(int argc, char **argv)
         return -1;
 
     pcl::ModelCoefficients::Ptr plane = bin.getPlaneGroundPoints();
+    pcl::PointCloud<pcl::PointXYZ>::Ptr top_vertices = bin.getVerticesBinContour();
 
     //time computation
     auto end = std::chrono::steady_clock::now();
@@ -48,6 +50,7 @@ int main(int argc, char **argv)
     //
     EntropyFilter ef;
     ef.setInputCloud(cloud_grasp);
+    ef.setVerticesBinContour(top_vertices);
     ef.setDownsampleLeafSize(0.005);
     ef.setEntropyThreshold(0.65);
     ef.setKLocalSearch(500);        // Nearest Neighbour Local Search
