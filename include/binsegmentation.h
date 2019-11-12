@@ -36,6 +36,7 @@ public:
                         m_plane(new pcl::ModelCoefficients)
     {
         m_sqr_eps = 0.03;
+        m_max_bin_height = 2;
     }
 
     void setInputCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud);

@@ -34,6 +34,7 @@ int main(int argc, char **argv)
     bin.setInputCloud(source);
     bin.setNumberLines(4);
     bin.setScaleFactorHullBorders(0.1);
+    bin.setMaxBinHeight(0.3);
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_grasp(new pcl::PointCloud<pcl::PointXYZRGB>);
     bin.compute(cloud_grasp);

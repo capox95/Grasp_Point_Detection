@@ -731,7 +731,6 @@ void BinSegmentation::computePlaneBottomBin(pcl::PointCloud<pcl::PointXYZ>::Ptr 
     Eigen::Vector3f n(plane->values[0], plane->values[1], plane->values[2]);
     float p = plane->values[3];
     float distance, distance_max = 0;
-
     for (int i = 0; i < cloud->size(); i++)
     {
         // D=n·x_0+p
@@ -746,7 +745,6 @@ void BinSegmentation::computePlaneBottomBin(pcl::PointCloud<pcl::PointXYZ>::Ptr 
                 distance_max = distance;
         }
     }
-
     //check max bin height
     if (distance_max > max_bin_height)
         distance_max = max_bin_height;

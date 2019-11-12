@@ -24,7 +24,7 @@ private:
     float m_leafsize, m_entropy_threshold, m_curvature_threshold,
         m_depth_interval, m_depth_threshold, m_angle_threshold, _max_entropy;
     int m_KNN;
-    bool _flag_depth, _flag_vertices;
+    bool _flag_vertices;
 
 public:
     EntropyFilter() : m_source(new pcl::PointCloud<pcl::PointXYZRGB>),
@@ -42,7 +42,6 @@ public:
                       m_plane_top(new pcl::ModelCoefficients)
 
     {
-        _flag_depth = false;
         _flag_vertices = false;
     }
 
