@@ -74,21 +74,43 @@ void PointPose::visualizeGrasp()
     //viz.addCoordinateSystem(0.1);
     viz.setBackgroundColor(1.0f, 1.0f, 1.0f);
     viz.addPointCloud<pcl::PointXYZRGB>(m_source, "source");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.2f, 0.0f, 1.0f, "source");
+    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 0.7f, 0.0f, "source");
+    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "source");
 
     viz.addPointCloud<pcl::PointXYZ>(m_cloud_grasp, "cloud_grasp");
     viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_grasp");
     viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 0.0f, "cloud_grasp");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_grasp");
+    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 5, "cloud_grasp");
 
     //viz.addPointCloud<pcl::PointXYZ>(m_cloud_projected, "cloud_projected");
     //viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0f, 1.0f, 0.0f, "cloud_projected");
     //viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud_projected");
 
     viz.addSphere(m_pointsCoordinateFrame[0], 0.005, "sphere");
-    viz.addArrow(m_pointsCoordinateFrame[1], m_pointsCoordinateFrame[0], 1.0f, 0.0f, 0.0f, false, "x_axis");
-    viz.addArrow(m_pointsCoordinateFrame[2], m_pointsCoordinateFrame[0], 0.0f, 1.0f, 0.0f, false, "y_axis");
-    viz.addArrow(m_pointsCoordinateFrame[3], m_pointsCoordinateFrame[0], 0.0f, 0.0f, 1.0f, false, "z_axis");
+    //viz.addArrow(m_pointsCoordinateFrame[1], m_pointsCoordinateFrame[0], 1.0f, 0.0f, 0.0f, false, "x_axis");
+    //viz.addArrow(m_pointsCoordinateFrame[2], m_pointsCoordinateFrame[0], 0.0f, 1.0f, 0.0f, false, "y_axis");
+    //viz.addArrow(m_pointsCoordinateFrame[3], m_pointsCoordinateFrame[0], 0.0f, 0.0f, 1.0f, false, "z_axis");
+
+    Eigen::Vector3f V0 = m_pointsCoordinateFrame[0].getVector3fMap();
+    Eigen::Vector3f V1 = m_pointsCoordinateFrame[1].getVector3fMap() - V0;
+    Eigen::Vector3f V2 = m_pointsCoordinateFrame[2].getVector3fMap() - V0;
+    Eigen::Vector3f V3 = m_pointsCoordinateFrame[3].getVector3fMap() - V0;
+
+    pcl::PointXYZ pointX = pcl::PointXYZ(V0.x() + 0.1 * V1.x(),
+                                         V0.y() + 0.1 * V1.y(),
+                                         V0.z() + 0.1 * V1.z());
+
+    pcl::PointXYZ pointY = pcl::PointXYZ(V0.x() + 0.1 * V2.x(),
+                                         V0.y() + 0.1 * V2.y(),
+                                         V0.z() + 0.1 * V2.z());
+
+    pcl::PointXYZ pointZ = pcl::PointXYZ(V0.x() + 0.1 * V3.x(),
+                                         V0.y() + 0.1 * V3.y(),
+                                         V0.z() + 0.1 * V3.z());
+
+    viz.addArrow(pointX, m_pointsCoordinateFrame[0], 1.0f, 0.0f, 0.0f, false, "x_axis");
+    viz.addArrow(pointY, m_pointsCoordinateFrame[0], 0.0f, 1.0f, 0.0f, false, "y_axis");
+    viz.addArrow(pointZ, m_pointsCoordinateFrame[0], 0.0f, 0.0f, 1.0f, false, "z_axis");
 
     viz.addSphere(m_origin, 0.005, "origin");
 

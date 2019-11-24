@@ -145,7 +145,10 @@ void BinSegmentation::visualize(bool showLines = true, bool showVertices = true,
     vizSource.addCoordinateSystem(0.1, "coord", 0);
     vizSource.setBackgroundColor(1.0f, 1.0f, 1.0f);
     vizSource.addPointCloud(m_source, "m_source");
-    vizSource.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.2f, 0.0f, 1.0f, "m_source");
+    vizSource.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 0.7f, 0.0f, "m_source");
+    vizSource.addPointCloud(m_occluding_edges, "occluding_edges");
+    vizSource.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 0.0f, 1.0f, "occluding_edges");
+    vizSource.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3.0f, "occluding_edges");
 
     if (showLines)
     {
@@ -168,14 +171,14 @@ void BinSegmentation::visualize(bool showLines = true, bool showVertices = true,
     //viz.addCoordinateSystem(0.1, "coord", 0);
     viz.setBackgroundColor(1.0f, 1.0f, 1.0f);
     viz.addPointCloud(m_source, "m_source");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.2f, 0.0f, 1.0f, "m_source");
+    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 0.7f, 0.0f, "m_source");
 
     //viz.addPointCloud(m_boundary_edges, "boundary_edges");
     //viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 1.0f, 0.0f, "boundary_edges");
 
-    viz.addPointCloud(m_occluding_edges, "occluding_edges");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 0.0f, 1.0f, "occluding_edges");
-    viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "occluding_edges");
+    //viz.addPointCloud(m_occluding_edges, "occluding_edges");
+    //viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.0f, 0.0f, 1.0f, "occluding_edges");
+    //viz.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "occluding_edges");
 
     if (showLines)
     {
